@@ -1,0 +1,15 @@
+﻿@model SocialNetworkClient.Models.MainModel
+
+@if (Model.LoggedInUser == null)
+{
+    @Html.BeginForm("ClientLogin", "Home", FormMethod.Post)
+    {
+        @Html.TextBoxFor(m => m.UserLogin.Username, new { placeholder = "Username", @class = "form-input" }) <input type="submit" value="Log In" /> <br />
+        @Html.TextBoxFor(model => model.UserLogin.Password, new { placeholder = "Password", @class = "form-input" })<br />
+
+    }
+}
+else
+{
+    <span class="UserDetails" >Hello, @Model.LoggedInUser.LastName @Model.LoggedInUser.FirstName </span>
+}

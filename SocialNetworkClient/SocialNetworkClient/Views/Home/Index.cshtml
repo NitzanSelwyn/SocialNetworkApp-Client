@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+
+</div>
+@if (ViewBag.ErrorMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.ErrorMessage");
+    </script>
+}
