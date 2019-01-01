@@ -1,2 +1,15 @@
 ﻿@model SocialNetworkClient.Models.MainModel
 
+<h2>Upload a post</h2>
+@using (Html.BeginForm("SendPost", "Home", FormMethod.Post, new
+{ enctype = "multipart/form-data" }))
+{
+   
+    <p>@Html.DisplayNameFor(n => n.Post.Text) <br /> @Html.TextAreaFor(n => n.Post.Text, new { maxlength = SocialNetworkClient.Configs.InputsConfigs.MaxPostTextLen })<span class="error">@Html.ValidationMessageFor(n => n.Post.Text)</span></p>
+
+
+    <p>@Html.DisplayNameFor(n => n.Post.Image) <br />@Html.TextBoxFor(n => n.Post.Image, new { type = "file" }) <span class="error">@ViewBag.imageError</span></p>
+
+      <div class="error"> @Html.ValidationSummary()</div>
+    <input type="submit" value="Post" />
+}

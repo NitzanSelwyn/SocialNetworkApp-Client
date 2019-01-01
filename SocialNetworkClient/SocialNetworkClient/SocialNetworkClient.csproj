@@ -152,12 +152,14 @@
     <Compile Include="Models\MainModel.cs" />
     <Compile Include="Models\Posts\Comment.cs" />
     <Compile Include="Models\Posts\Post.cs" />
+    <Compile Include="Models\Posts\PostUpload.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Users\UserLogin.cs" />
     <Compile Include="Models\Users\UserRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\HttpClientSender.cs" />
     <Compile Include="Validators\BirthDateValidator.cs" />
+    <Compile Include="Validators\ImageValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -197,8 +199,8 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\UserDetails.cshtml" />
-    <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Views\Shared\AddPost.cshtml" />
+    <Content Include="Views\Home\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -11,8 +11,8 @@ namespace SocialNetworkClient.Models
         public string PosterName { get; set; }
         public int Likes { get; set; }
         public List<Comment> Comments { get; set; }
-        public int? ImageUrl { get; set; }
-        public Post(string PosterName, int Likes, int? ImageUrl, List<Comment> Comments = null)
+        public string ImageUrl { get; set; }
+        public Post(string PosterName, int Likes, string ImageUrl, List<Comment> Comments = null)
         {
             this.PosterName = PosterName;
             this.Likes = Likes;

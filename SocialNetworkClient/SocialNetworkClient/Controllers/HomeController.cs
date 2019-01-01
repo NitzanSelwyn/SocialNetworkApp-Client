@@ -14,10 +14,12 @@ namespace SocialNetworkClient.Controllers
 {
     public class HomeController : Controller
     {
+        public static List<Post> Posts = new List<Post>();
         public IMainModel mainModel { get; set; }
         public IHttpClient httpClient { get; set; }
         public HomeController()
         {
+
             mainModel = ClientContainer.container.GetInstance<IMainModel>();
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
         }
@@ -79,8 +81,13 @@ namespace SocialNetworkClient.Controllers
         public ActionResult OpenRegister(MainModel model)
         {
             //opens the register window
-            return View("Register",model);
+            return View("Register", model);
         }
-
+        public ActionResult SendPost(MainModel model)
+        {
+            //sends a new post
+            Post newPost = new Post(model.LoggedInUser.ToString(), 0, "");
+            return View("Index", model);
+        }
     }
 }

@@ -10,5 +10,7 @@ namespace SocialNetworkClient.Configs
         public const int MaxGenLen = 20; //the maximum len of most inputs
         public const int MaxEmailLen = 30;
         public const int MaxAddressLen = 35;
+        public const int MaxPostTextLen = 1000;
+        public const int MaxCommentTextLen = 500;
     }
 }
