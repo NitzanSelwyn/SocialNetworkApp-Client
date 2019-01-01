@@ -79,9 +79,8 @@ namespace SocialNetworkClient.Controllers
         public ActionResult OpenRegister(MainModel model)
         {
             //opens the register window
-            return View(model);
-
+            return View("Register",model);
         }
-   
+
     }
 }
