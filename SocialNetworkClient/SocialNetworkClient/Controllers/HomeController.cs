@@ -19,13 +19,19 @@ namespace SocialNetworkClient.Controllers
         public IHttpClient httpClient { get; set; }
         public HomeController()
         {
-
             mainModel = ClientContainer.container.GetInstance<IMainModel>();
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
         }
-        public ActionResult Index()
+        public ActionResult Index(MainModel mainModel)
         {
-            return View(mainModel);
+            if (mainModel != null)
+            {
+                return View(mainModel);
+            }
+            else
+            {
+                return View(this.mainModel);
+            }
         }
 
         public ActionResult About()
@@ -83,10 +89,12 @@ namespace SocialNetworkClient.Controllers
             //opens the register window
             return View("Register", model);
         }
+        [HttpPost]
         public ActionResult SendPost(MainModel model)
         {
             //sends a new post
-            Post newPost = new Post(model.LoggedInUser.ToString(), 0, "");
+            Post newPost = new Post(model.LoggedInUser.ToString(), model.Post.Text, 0, model.Post.Image.FileName);
+
             return View("Index", model);
         }
     }

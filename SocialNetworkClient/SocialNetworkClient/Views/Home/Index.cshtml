@@ -1,9 +1,13 @@
-﻿@{
+﻿@model SocialNetworkClient.Models.MainModel
+@{
     ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron">
-    @Html.Partial("AddPost")
+    @if (Model.LoggedInUser != null)
+    {
+        @Html.Partial("AddPost",Model)
+    }
 </div>
 @if (ViewBag.ErrorMessage != null)
 {
