@@ -15,7 +15,7 @@ namespace SocialNetworkClient.Controllers
     public class HomeController : Controller
     {
         public static List<Post> Posts = new List<Post>();
-        public IMainModel mainModel { get; set; }
+        public static IMainModel mainModel { get; set; }
         public IHttpClient httpClient { get; set; }
 
         public HomeController()
@@ -32,7 +32,7 @@ namespace SocialNetworkClient.Controllers
             }
             else
             {
-                return View(this.mainModel);
+                return View(mainModel);
             }
         }
 
@@ -53,39 +53,32 @@ namespace SocialNetworkClient.Controllers
         public ActionResult ClientLogin(MainModel model)
         {
             //tries a client regular login
-            //  Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.userLoginRoute, //model.UserLogin);
-            //  if (returnTuple.Item2 == HttpStatusCode.OK)
-            //  {
-            //      if (returnTuple.Item1 != null)
-            //      {
-            //          JObject jobj = new JObject();
-            //          jobj = (JObject)returnTuple.Item1;
-            //          model.LoggedInUser = new User { FirstName = "Shahaf", LastName = "Dahan", Email /= /"Shahafd94@hotmail.com", Username = "Shahafd", Address = "Tishbi 17 Haifa", BirthDate = //DateTime.Parse("Jan 7, 1994"), ID = 1, WorkLocation = "Sela Labs" };
-            //          return View("Index", model);
-            //      }
-            //      else
-            //      {
-            //          ViewBag.ErrorMessage = "Username or password are unvalid.";
-            //          return View("Index", model);
-            //      }
-            //  }
-            //  else
-            //  {
-            //      ViewBag.ErrorMessage = "An error has occurred.";
-            //      return View("Index", model);
-            //  }
-            model.LoggedInUser = new User
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.userLoginRoute,model.UserLogin);
+              if (returnTuple.Item2 == HttpStatusCode.OK)
             {
-                FirstName = "Shahaf",
-                LastName = "Dahan",
-                Email = "Shahafd94@hotmail.com",
-                Username = "Shahafd",
-                Address = "Tishbi 17 Haifa",
-                BirthDate = DateTime.Parse("Jan 7, 1994"),
-                ID = 1,
-                WorkLocation = "Sela Labs"
-            };
-            return View("Index", model);
+                if (returnTuple.Item1 != null)
+                {
+                    JObject jobj = new JObject();
+                    jobj = (JObject)returnTuple.Item1;
+
+                    User user = jobj.ToObject<User>();
+                    model.LoggedInUser = user;
+          
+                    return View("Index", model);
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Username or password are unvalid.";
+                    return View("Index", model);
+                }
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "An error has occurred.";
+                return View("Index", model);
+            }
+
+
         }
 
         public ActionResult OpenRegister(MainModel model)
@@ -104,6 +97,11 @@ namespace SocialNetworkClient.Controllers
             }
 
             return View("Index", model);
+        }
+
+        public ActionResult UserProfile(string token)
+        {
+            return View("UserProfile", mainModel);
         }
     }
 }

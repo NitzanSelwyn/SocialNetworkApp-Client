@@ -32,12 +32,12 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
                     @if (Model.LoggedInUser == null)
                     {
                         <li>@Html.ActionLink("Register", "OpenRegister", "Home")</li>
                     }
                     <li>@Html.Partial("UserDetails")</li>
+                    
                 </ul>
             </div>
         </div>

@@ -7,6 +7,6 @@ namespace SocialNetworkClient.Configs
 {
     public static class MainConfigs
     {
-        public const string Url = "localjost...";
+        public const string Url = "http://localhost:55620/";
     }
 }

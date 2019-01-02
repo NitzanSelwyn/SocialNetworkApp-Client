@@ -1,0 +1,84 @@
+﻿@model SocialNetworkClient.Models.MainModel
+
+@{
+    ViewBag.Title = "UserProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>UserProfile</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LoggedInUser.Username)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoggedInUser.Username)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoggedInUser.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoggedInUser.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoggedInUser.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoggedInUser.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoggedInUser.Password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoggedInUser.Password)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoggedInUser.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoggedInUser.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoggedInUser.BirthDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoggedInUser.BirthDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoggedInUser.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoggedInUser.Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoggedInUser.WorkLocation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoggedInUser.WorkLocation)
+        </dd>
+
+    </dl>
+</div>
+@*<p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>*@
+

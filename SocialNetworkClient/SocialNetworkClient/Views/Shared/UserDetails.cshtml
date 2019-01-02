@@ -4,15 +4,15 @@
 {
     @Html.BeginForm("ClientLogin", "Home", FormMethod.Post)
     {
-        @Html.TextBoxFor(m => m.UserLogin.Username, new { placeholder = "Username", @class = "form-input" }) <input type="submit" value="Log In" /> <br />
-        @Html.TextBoxFor(model => model.UserLogin.Password, new { placeholder = "Password", @class = "form-input" })<br />
-
+        @Html.TextBoxFor(m => m.UserLogin.Username, new { placeholder = "Username", @class = "form-input" })
+        @Html.TextBoxFor(model => model.UserLogin.Password, new { placeholder = "Password", @class = "form-input" })
+        <input type="submit" value="Log In" />
     }
-    <div>
-        <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="true"></div>
-    </div>
+
+    <div class="fb-login-button" data-max-rows="1" data-size="small" data-button-type="continue_with"
+         data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="true"></div>
 }
 else
 {
-    <span class="UserDetails">Hello, @Model.LoggedInUser.LastName @Model.LoggedInUser.FirstName </span>
+    <a @Html.ActionLink($"Hello, {@Model.LoggedInUser.LastName} {@Model.LoggedInUser.FirstName}", actionName: "UserProfile")> </a>
 }
