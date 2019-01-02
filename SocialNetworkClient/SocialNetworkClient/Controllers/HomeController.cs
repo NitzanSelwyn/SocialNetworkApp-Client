@@ -17,11 +17,13 @@ namespace SocialNetworkClient.Controllers
         public static List<Post> Posts = new List<Post>();
         public IMainModel mainModel { get; set; }
         public IHttpClient httpClient { get; set; }
+
         public HomeController()
         {
             mainModel = ClientContainer.container.GetInstance<IMainModel>();
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
         }
+
         public ActionResult Index(MainModel mainModel)
         {
             if (mainModel != null)
@@ -47,6 +49,7 @@ namespace SocialNetworkClient.Controllers
 
             return View();
         }
+
         public ActionResult ClientLogin(MainModel model)
         {
             //tries a client regular login
@@ -84,16 +87,21 @@ namespace SocialNetworkClient.Controllers
             };
             return View("Index", model);
         }
+
         public ActionResult OpenRegister(MainModel model)
         {
             //opens the register window
             return View("Register", model);
         }
-        [HttpPost]
+
         public ActionResult SendPost(MainModel model)
         {
-            //sends a new post
-            Post newPost = new Post(model.LoggedInUser.ToString(), model.Post.Text, 0, model.Post.Image.FileName);
+            if (model.LoggedInUser != null)
+            {
+                //sends a new post
+                Post newPost = new Post(model.LoggedInUser.ToString(),
+                    model.Post.Text, 0, model.Post.Image.FileName);
+            }
 
             return View("Index", model);
         }

@@ -6,7 +6,7 @@
 <div class="jumbotron">
     @if (Model.LoggedInUser != null)
     {
-        @Html.Partial("AddPost",Model)
+        @Html.Partial("AddPost", new ViewDataDictionary(Model))
     }
 </div>
 @if (ViewBag.ErrorMessage != null)
