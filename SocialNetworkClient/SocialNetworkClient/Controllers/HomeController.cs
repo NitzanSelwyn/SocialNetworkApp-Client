@@ -3,6 +3,7 @@ using SocialNetworkClient.Configs;
 using SocialNetworkClient.Containers;
 using SocialNetworkClient.Contracts;
 using SocialNetworkClient.Models;
+using SocialNetworkClient.Models.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,25 +16,18 @@ namespace SocialNetworkClient.Controllers
     public class HomeController : Controller
     {
         public static List<Post> Posts = new List<Post>();
-        public static IMainModel mainModel { get; set; }
+        public static MainModel mainModel = new MainModel();
         public IHttpClient httpClient { get; set; }
 
         public HomeController()
         {
-            mainModel = ClientContainer.container.GetInstance<IMainModel>();
+            // mainModel = ClientContainer.container.GetInstance<IMainModel>();
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
         }
 
-        public ActionResult Index(MainModel mainModel)
+        public ActionResult Index()
         {
-            if (mainModel != null)
-            {
-                return View(mainModel);
-            }
-            else
-            {
-                return View(mainModel);
-            }
+            return View(mainModel);
         }
 
         public ActionResult About()
@@ -61,22 +55,21 @@ namespace SocialNetworkClient.Controllers
                 {
                     JObject jobj = new JObject();
                     jobj = (JObject)returnTuple.Item1;
+                    LoginRegisterResponse obj = jobj.ToObject<LoginRegisterResponse>();
+                    mainModel.LoggedInUser = obj.user;
 
-                    User user = jobj.ToObject<User>();
-                    model.LoggedInUser = user;
-
-                    return View("Index", model);
+                    return View("Index",mainModel);
                 }
                 else
                 {
                     ViewBag.ErrorMessage = "Username or password are unvalid.";
-                    return View("Index", model);
+                    return View("Index", mainModel);
                 }
             }
             else
             {
                 ViewBag.ErrorMessage = "An error has occurred.";
-                return View("Index", model);
+                return View("Index", mainModel);
             }
 
 
@@ -95,6 +88,11 @@ namespace SocialNetworkClient.Controllers
             //tries to send a user registration
             if (ModelState.IsValid)
             {
+                if (model.UserRegister.Password != model.UserRegister.PasswordConfirm)
+                {
+                    ViewBag.ErrorMessage = "Passwords dont match";
+                    return View("Register", model);
+                }
                 Tuple<object, HttpStatusCode> returnTuple1 = httpClient.PostRequest(ApiConfigs.UsernameExistsRoute, model.UserRegister.Username);
                 if (returnTuple1.Item2 == HttpStatusCode.OK)
                 {
@@ -142,6 +140,45 @@ namespace SocialNetworkClient.Controllers
         public ActionResult UserProfile(string token)
         {
             return View("UserProfile", mainModel);
+        }
+
+        //Cookies
+        public void CreateOrUpdateCookie(string cookiename, string val)
+        {
+            HttpCookie cookie = Request.Cookies[cookiename];
+            if (cookie == null)//not Exists
+            {
+                cookie = new HttpCookie(cookiename);
+                cookie.Values[cookiename] = val;
+            }
+            else//change value
+            {
+                cookie.Values[cookiename] = val;
+            }
+            cookie.Expires = DateTime.Now.AddDays(7);
+
+            Response.Cookies.Add(cookie);
+
+        }
+        public string GetCookieValue(string cookieKey)//V
+        {
+            if (Request.Cookies[cookieKey] != null)
+            {
+                Request.Cookies[cookieKey].Expires.AddDays(7);//Extend cookie expiration time
+                string returnStr = Request.Cookies[cookieKey].Value;
+                returnStr = returnStr.Remove(0, 11);//remove cookieKey from value
+                return returnStr;
+            }
+            else return 0.ToString();
+        }
+        public void DeleteCookie(string cookieKey)//V
+        {
+            if (Request.Cookies[cookieKey] != null)
+            {
+                HttpCookie myCookie = new HttpCookie(cookieKey);
+                myCookie.Expires = DateTime.Now.AddDays(-1d);
+                Response.Cookies.Add(myCookie);
+            }
         }
     }
 }

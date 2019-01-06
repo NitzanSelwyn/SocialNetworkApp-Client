@@ -7,7 +7,23 @@ namespace SocialNetworkClient.Models
 {
     public class User
     {
-        public int ID { get; set; }
+
+        public User()
+        {
+
+        }
+        public User(string Username, string FirstName, string LastName, string Password, string Email, DateTime BirthDate, string Address, string WorkLocation)
+        {
+            this.Username = Username;
+            this.FirstName = FirstName;
+            this.LastName = LastName;
+            this.Password = Password;
+            this.Email = Email;
+            this.BirthDate = BirthDate;
+            this.Address = Address;
+            this.WorkLocation = WorkLocation;
+
+        }
         public string Username { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -21,5 +37,6 @@ namespace SocialNetworkClient.Models
         {
             return string.Format($"{FirstName} {LastName}");
         }
+
     }
 }

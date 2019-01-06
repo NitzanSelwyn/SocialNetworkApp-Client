@@ -156,6 +156,7 @@
     <Compile Include="Models\Posts\Comment.cs" />
     <Compile Include="Models\Posts\Post.cs" />
     <Compile Include="Models\Posts\PostUpload.cs" />
+    <Compile Include="Models\Users\LoginRegisterResponse.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Users\UserLogin.cs" />
     <Compile Include="Models\Users\UserRegister.cs" />
@@ -208,7 +209,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

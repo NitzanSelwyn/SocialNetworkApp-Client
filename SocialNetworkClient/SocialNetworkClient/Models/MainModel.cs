@@ -9,6 +9,10 @@ namespace SocialNetworkClient.Models
 {
     public class MainModel : IMainModel
     {
+        public MainModel()
+        {
+
+        }
         public User LoggedInUser { get; set; }
         public UserRegister UserRegister { get; set; }
         public UserLogin UserLogin { get; set; }
