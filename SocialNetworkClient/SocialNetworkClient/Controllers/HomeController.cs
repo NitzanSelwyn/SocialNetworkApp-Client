@@ -50,11 +50,12 @@ namespace SocialNetworkClient.Controllers
             return View();
         }
 
+        [HttpPost]
         public ActionResult ClientLogin(MainModel model)
         {
             //tries a client regular login
-            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.userLoginRoute,model.UserLogin);
-              if (returnTuple.Item2 == HttpStatusCode.OK)
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.UserLoginRoute, model.UserLogin);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
             {
                 if (returnTuple.Item1 != null)
                 {
@@ -63,7 +64,7 @@ namespace SocialNetworkClient.Controllers
 
                     User user = jobj.ToObject<User>();
                     model.LoggedInUser = user;
-          
+
                     return View("Index", model);
                 }
                 else
@@ -81,9 +82,48 @@ namespace SocialNetworkClient.Controllers
 
         }
 
+        [HttpGet]
         public ActionResult OpenRegister(MainModel model)
         {
             //opens the register window
+            return View("Register", model);
+        }
+
+        [HttpPost]
+        public ActionResult SendRegister(MainModel model)
+        {
+            //tries to send a user registration
+            if (ModelState.IsValid)
+            {
+                Tuple<object, HttpStatusCode> returnTuple1 = httpClient.PostRequest(ApiConfigs.UsernameExistsRoute, model.UserRegister.Username);
+                if (returnTuple1.Item2 == HttpStatusCode.OK)
+                {
+                    bool userNameExists = Convert.ToBoolean(returnTuple1.Item1);
+                    if (userNameExists)
+                    {
+                        ViewBag.ErrorMessage = "Username already exists";
+                        return View("Register", model);
+                    }
+                    else
+                    {
+                        Tuple<object, HttpStatusCode> returnTuple2 = httpClient.PostRequest(ApiConfigs.UserRegisterRoute, model.UserRegister);
+                        if (returnTuple2.Item2 == HttpStatusCode.OK)
+                        {
+                            ViewBag.SuccessMessage = "Registration successful";
+                            return View("Index", model);
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessage = "An Error has acquired";
+                            return View("Register", model);
+                        }
+                    }
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "an Error has acquired";
+                }
+            }
             return View("Register", model);
         }
 

@@ -2,7 +2,7 @@
 
 @if (Model.LoggedInUser == null)
 {
-    @Html.BeginForm("ClientLogin", "Home", FormMethod.Post)
+    using (Html.BeginForm("ClientLogin", "Home", FormMethod.Post))
     {
         @Html.TextBoxFor(m => m.UserLogin.Username, new { placeholder = "Username", @class = "form-input" })
         @Html.TextBoxFor(model => model.UserLogin.Password, new { placeholder = "Password", @class = "form-input" })
