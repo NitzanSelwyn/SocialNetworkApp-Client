@@ -32,7 +32,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home",Model)</li>
-                    @if (Model.LoggedInUser == null)
+                    @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken] == null)
                     {
                         <li>@Html.ActionLink("Register", "OpenRegister", "Home")</li>
                     }

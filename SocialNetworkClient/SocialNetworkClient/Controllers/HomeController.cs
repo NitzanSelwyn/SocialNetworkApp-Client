@@ -16,12 +16,12 @@ namespace SocialNetworkClient.Controllers
     public class HomeController : Controller
     {
         public static List<Post> Posts = new List<Post>();
-        public static MainModel mainModel = new MainModel();
+        public IMainModel mainModel { get; set; }
         public IHttpClient httpClient { get; set; }
 
         public HomeController()
         {
-            // mainModel = ClientContainer.container.GetInstance<IMainModel>();
+            mainModel = ClientContainer.container.GetInstance<IMainModel>();
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
         }
 
@@ -56,9 +56,10 @@ namespace SocialNetworkClient.Controllers
                     JObject jobj = new JObject();
                     jobj = (JObject)returnTuple.Item1;
                     LoginRegisterResponse obj = jobj.ToObject<LoginRegisterResponse>();
-                    mainModel.LoggedInUser = obj.user;
-
-                    return View("Index",mainModel);
+                    model.LoggedInUser = obj.user;
+                    SaveDetailsToSession(obj.user);
+                    SaveTokenToSession(obj.token);
+                    return View("Index", mainModel);
                 }
                 else
                 {
@@ -72,7 +73,12 @@ namespace SocialNetworkClient.Controllers
                 return View("Index", mainModel);
             }
 
+        }
 
+        private void SaveTokenToSession(string token)
+        {
+            //saves the token to the session
+            Session[MainConfigs.SessionToken] = token;
         }
 
         [HttpGet]
@@ -107,6 +113,11 @@ namespace SocialNetworkClient.Controllers
                         Tuple<object, HttpStatusCode> returnTuple2 = httpClient.PostRequest(ApiConfigs.UserRegisterRoute, model.UserRegister);
                         if (returnTuple2.Item2 == HttpStatusCode.OK)
                         {
+                            JObject jobj = new JObject();
+                            jobj = (JObject)returnTuple2.Item1;
+                            LoginRegisterResponse response = jobj.ToObject<LoginRegisterResponse>();
+                            SaveTokenToSession(response.token);
+                            SaveDetailsToSession(response.user);
                             ViewBag.SuccessMessage = "Registration successful";
                             return View("Index", model);
                         }
@@ -125,6 +136,13 @@ namespace SocialNetworkClient.Controllers
             return View("Register", model);
         }
 
+        private void SaveDetailsToSession(User user)
+        {
+            //saves the user's first and last name to the session for visualisation
+            Session[MainConfigs.SessionFirstnameToken] = user.FirstName;
+            Session[MainConfigs.SessionLastnameToken] = user.LastName;
+        }
+
         public ActionResult SendPost(MainModel model)
         {
             if (model.LoggedInUser != null)
@@ -137,48 +155,58 @@ namespace SocialNetworkClient.Controllers
             return View("Index", model);
         }
 
-        public ActionResult UserProfile(string token)
+        public ActionResult UserProfile()
         {
-            return View("UserProfile", mainModel);
+            if (IsTokenValid())
+            {
+                mainModel.LoggedInUser = GetMyUser();
+                return View("UserProfile", mainModel);
+            }
+            else return UnvalidTokenRoute();
         }
 
-        //Cookies
-        public void CreateOrUpdateCookie(string cookiename, string val)
+        private ActionResult UnvalidTokenRoute()
         {
-            HttpCookie cookie = Request.Cookies[cookiename];
-            if (cookie == null)//not Exists
-            {
-                cookie = new HttpCookie(cookiename);
-                cookie.Values[cookiename] = val;
-            }
-            else//change value
-            {
-                cookie.Values[cookiename] = val;
-            }
-            cookie.Expires = DateTime.Now.AddDays(7);
+            //returns the user to the main window, with a pop message of logged out and clear the session data
+            Session[MainConfigs.SessionFirstnameToken] = null;
+            Session[MainConfigs.SessionLastnameToken] = null;
+            Session[MainConfigs.SessionToken] = null;
+            ViewBag.ErrorMessag = "Session Timeout, Logged out of the system";
+            return View("Index");
 
-            Response.Cookies.Add(cookie);
 
         }
-        public string GetCookieValue(string cookieKey)//V
+
+        private User GetMyUser()
         {
-            if (Request.Cookies[cookieKey] != null)
+            //returns the user from this token
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetMyUserRoute, Session[MainConfigs.SessionToken]);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
             {
-                Request.Cookies[cookieKey].Expires.AddDays(7);//Extend cookie expiration time
-                string returnStr = Request.Cookies[cookieKey].Value;
-                returnStr = returnStr.Remove(0, 11);//remove cookieKey from value
-                return returnStr;
+                JObject jobj = new JObject();
+                jobj = (JObject)returnTuple.Item1;
+                return jobj.ToObject<User>();
             }
-            else return 0.ToString();
+            else
+            {
+                return null;
+            }
+
         }
-        public void DeleteCookie(string cookieKey)//V
+
+        public bool IsTokenValid()
         {
-            if (Request.Cookies[cookieKey] != null)
+            //validates the token from the session
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.ValidateTokenRoute, Session[MainConfigs.SessionToken]);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
             {
-                HttpCookie myCookie = new HttpCookie(cookieKey);
-                myCookie.Expires = DateTime.Now.AddDays(-1d);
-                Response.Cookies.Add(myCookie);
+                return Convert.ToBoolean(returnTuple.Item1);
+            }
+            else
+            {
+                return false;
             }
         }
+
     }
 }
