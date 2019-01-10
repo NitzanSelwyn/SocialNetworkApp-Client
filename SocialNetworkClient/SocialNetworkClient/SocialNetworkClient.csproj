@@ -147,6 +147,7 @@
     <Compile Include="Configs\MainConfigs.cs" />
     <Compile Include="Containers\ClientContainer.cs" />
     <Compile Include="Contracts\IHttpClient.cs" />
+    <Compile Include="Contracts\IInputsValidator.cs" />
     <Compile Include="Contracts\IMainModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Models\Users\UserRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\HttpClientSender.cs" />
+    <Compile Include="Services\InputsValidator.cs" />
     <Compile Include="Validators\BirthDateValidator.cs" />
     <Compile Include="Validators\ImageValidator.cs" />
   </ItemGroup>
@@ -209,13 +211,12 @@
     <Content Include="Views\Shared\AddPost.cshtml" />
     <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Views\Home\UserProfile.cshtml" />
-    <Content Include="Views\Home\UserSettings.cshtml" />
-    <Content Include="Views\Home\SettingsViews\BlockedUsers.cshtml" />
-    <Content Include="Views\Home\SettingsViews\EditDetails.cshtml" />
+    <Content Include="Views\Settings\UserSettings.cshtml" />
+    <Content Include="Views\Settings\BlockedUsers.cshtml" />
+    <Content Include="Views\Settings\EditDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Settings\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
