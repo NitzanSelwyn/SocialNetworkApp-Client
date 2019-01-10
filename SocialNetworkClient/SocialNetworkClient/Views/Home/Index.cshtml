@@ -4,10 +4,10 @@
 }
 
 <div class="jumbotron">
-    @if (Model.LoggedInUser != null)
+    @*@if (Model.LoggedInUser != null)
     {
         @Html.Partial("AddPost", new ViewDataDictionary(Model))
-    }
+    }*@
 </div>
 @if (ViewBag.ErrorMessage != null)
 {
@@ -15,3 +15,10 @@
                 alert("@ViewBag.ErrorMessage");
     </script>
 }
+@if (ViewBag.SuccessMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.SuccessMessage");
+    </script>
+}
+

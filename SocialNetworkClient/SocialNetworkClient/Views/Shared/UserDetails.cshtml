@@ -1,11 +1,10 @@
 ﻿@model SocialNetworkClient.Models.MainModel
-
-@if (Model.LoggedInUser == null)
+@if(Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken]==null)
 {
-    @Html.BeginForm("ClientLogin", "Home", FormMethod.Post)
+    using (Html.BeginForm("ClientLogin", "Home", FormMethod.Post))
     {
         @Html.TextBoxFor(m => m.UserLogin.Username, new { placeholder = "Username", @class = "form-input" })
-        @Html.TextBoxFor(model => model.UserLogin.Password, new { placeholder = "Password", @class = "form-input" })
+        @Html.PasswordFor(model => model.UserLogin.Password, new { placeholder = "Password", @class = "form-input" })
         <input type="submit" value="Log In" />
     }
 
@@ -14,5 +13,5 @@
 }
 else
 {
-    <a @Html.ActionLink($"Hello, {@Model.LoggedInUser.LastName} {@Model.LoggedInUser.FirstName}", actionName: "UserProfile")> </a>
+    <a @Html.ActionLink($"Hello, {Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken]} {Session[SocialNetworkClient.Configs.MainConfigs.SessionLastnameToken]}", actionName: "UserProfile")> </a>
 }

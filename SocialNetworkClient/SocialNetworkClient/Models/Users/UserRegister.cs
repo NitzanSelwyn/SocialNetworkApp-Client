@@ -11,6 +11,10 @@ namespace SocialNetworkClient.Models
 {
     public class UserRegister
     {
+        public UserRegister()
+        {
+
+        }
         [Required(ErrorMessage = "* Please Enter a valid user name")]
         [StringLength(InputsConfigs.MaxGenLen)]
         [DisplayName("User Name")]
@@ -55,7 +59,8 @@ namespace SocialNetworkClient.Models
 
         [Required(ErrorMessage = "* Please Enter a Work location")]
         [StringLength(InputsConfigs.MaxAddressLen)]
-        [DisplayName("Address")]
+        [DisplayName("Work Location")]
         public string WorkLocation { get; set; }
+        
     }
 }
