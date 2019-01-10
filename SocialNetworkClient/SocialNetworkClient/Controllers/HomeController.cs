@@ -150,9 +150,15 @@ namespace SocialNetworkClient.Controllers
                 //sends a new post
                 Post newPost = new Post(model.LoggedInUser.ToString(),
                     model.Post.Text, 0, model.Post.Image.FileName);
-            }
 
-            return View("Index", model);
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.PostNewMessage, newPost);
+                if (returnTuple.Item2 == HttpStatusCode.OK)
+                {
+                    return View("Index");
+                }
+
+            }
+            return View("Index");
         }
 
         public ActionResult UserProfile()
