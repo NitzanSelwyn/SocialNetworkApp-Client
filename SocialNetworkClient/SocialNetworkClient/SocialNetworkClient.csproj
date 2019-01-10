@@ -205,6 +205,7 @@
     <Content Include="Views\Shared\AddPost.cshtml" />
     <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Views\Home\UserProfile.cshtml" />
+    <Content Include="Views\Shared\Post.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
