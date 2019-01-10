@@ -11,11 +11,12 @@ namespace SocialNetworkClient.Models
     {
         public MainModel()
         {
-
+            BlockedUsers = new Dictionary<string, string>();
         }
         public User LoggedInUser { get; set; }
         public UserRegister UserRegister { get; set; }
         public UserLogin UserLogin { get; set; }
         public PostUpload Post { get; set; }
+        public Dictionary<string,string> BlockedUsers { get; set; }
     }
 }

@@ -149,6 +149,8 @@
     <Compile Include="Contracts\IHttpClient.cs" />
     <Compile Include="Contracts\IMainModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="Enums\UserRequestEnum.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -156,7 +158,8 @@
     <Compile Include="Models\Posts\Comment.cs" />
     <Compile Include="Models\Posts\Post.cs" />
     <Compile Include="Models\Posts\PostUpload.cs" />
-    <Compile Include="Models\Users\LoginRegisterResponse.cs" />
+    <Compile Include="Models\RequestsAndResponses\LoginRegisterResponse.cs" />
+    <Compile Include="Models\RequestsAndResponses\UserRequestModel.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Users\UserLogin.cs" />
     <Compile Include="Models\Users\UserRegister.cs" />
@@ -206,9 +209,13 @@
     <Content Include="Views\Shared\AddPost.cshtml" />
     <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Views\Home\UserProfile.cshtml" />
+    <Content Include="Views\Home\UserSettings.cshtml" />
+    <Content Include="Views\Home\SettingsViews\BlockedUsers.cshtml" />
+    <Content Include="Views\Home\SettingsViews\EditDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Settings\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
