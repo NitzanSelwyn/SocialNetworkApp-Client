@@ -74,15 +74,37 @@
         <dd>
             @Html.DisplayFor(model => model.LoggedInUser.WorkLocation)
         </dd>
-       
+
         <dt>
             <br />
-            @Html.ActionLink("Edit Settings", "EditSettings","Settings" )
+            @Html.ActionLink("Edit Settings", "EditSettings", "Settings")
         </dt>
     </dl>
 </div>
-@*<p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>*@
+
+<br/>
+
+@if (Model.PostList != null)
+{
+    foreach (var item in Model.PostList)
+    {
+        <br />
+
+        <div class="container">
+            <div class="card" style="width:400px">
+                <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
+                <div class="card-body">
+                    <h4 class="card-title">@item.Author</h4>
+                    <p class="card-text">@item.Content</p>
+                    <p>
+                        <i onclick="myFunction(this)" class="fa fa-thumbs-up"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <br />
+    }
+}
+
 

@@ -13,7 +13,7 @@ namespace SocialNetworkClient.Configs
         public const string PostNewMessage = "Api/Post";
         public const string GetUsersPosts = "Api/Post/UsersPosts";
         public const string GetFolowersPosts = "Api/Post/FolowersPosts";
-        public const string EditPost = "Api/Post/edit";
+        public const string GetFollowingPosts = "Api/Post/FollowingPosts";
         public const string DeletePost = "Api/Post";
         //USERS
         public const string UserLoginRoute = "Api/Users/UserLogin";

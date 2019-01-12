@@ -5,9 +5,9 @@
 
 <div class="jumbotron">
     @*@if (Model.LoggedInUser != null)
-    {
-        @Html.Partial("AddPost", new ViewDataDictionary(Model))
-    }*@
+        {
+            @Html.Partial("AddPost", new ViewDataDictionary(Model))
+        }*@
 </div>
 @if (ViewBag.ErrorMessage != null)
 {
@@ -21,4 +21,37 @@
                 alert("@ViewBag.SuccessMessage");
     </script>
 }
+
+@if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken] != null)
+{
+    @Html.Partial("AddPost", Model)
+
+    <br/>
+
+    @if (Model.PostList != null)
+    {
+        foreach (var item in Model.PostList)
+        {
+            <br />
+
+            <div class="container">
+                <div class="card" style="width:400px">
+                    <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
+                    <div class="card-body">
+                        <h4 class="card-title">@item.Author</h4>
+                        <p class="card-text">@item.Content</p>
+                        <p>
+                            <i onclick="myFunction(this)" class="fa fa-thumbs-up"></i>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+        }
+    }
+}
+
+
+
 

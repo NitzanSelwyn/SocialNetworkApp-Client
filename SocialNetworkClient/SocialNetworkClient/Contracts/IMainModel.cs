@@ -9,5 +9,6 @@ namespace SocialNetworkClient.Contracts
     public interface IMainModel
     {
         User LoggedInUser { get; set; }
+        List<Post> PostList { get; set; }
     }
 }
