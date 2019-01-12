@@ -21,6 +21,7 @@ namespace SocialNetworkClient.Containers
                 container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
                 container.Register<IMainModel, MainModel>(Lifestyle.Singleton);
                 container.Register<IHttpClient, HttpClientSender>(Lifestyle.Singleton);
+                container.Register<IInputsValidator, InputsValidator>(Lifestyle.Singleton);
             }
 
         }

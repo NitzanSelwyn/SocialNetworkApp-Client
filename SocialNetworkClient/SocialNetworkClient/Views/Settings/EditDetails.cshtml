@@ -8,15 +8,15 @@
 <h2>EditDetails</h2>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("EditDetails", "Settings", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>User</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        
+
         <div class="form-group">
             @Html.LabelFor(model => model.LoggedInUser.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -33,7 +33,7 @@
             </div>
         </div>
 
-     
+
 
         <div class="form-group">
             @Html.LabelFor(model => model.LoggedInUser.Email, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -44,10 +44,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.LoggedInUser.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.UserRegister.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.LoggedInUser.BirthDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.LoggedInUser.BirthDate, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.UserRegister.BirthDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UserRegister.BirthDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -74,10 +74,17 @@
         </div>
     </div>
 }
+@for (int i = 0; i < 6; i++)
+{
+    if (ViewBag[$"Error{i}"] != null)
+    {
+        <script type="text/javascript">
+                alert("@ViewBag[$"Error{i}"]");
+        </script>
+    }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+}
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

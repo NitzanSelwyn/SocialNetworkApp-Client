@@ -54,7 +54,7 @@ namespace SocialNetworkClient.Models
         [Required(ErrorMessage = "* Please Enter a valid email adress")]
         [StringLength(InputsConfigs.MaxEmailLen)]
         [DisplayName("Email Adress")]
-        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "* Please Enter a valid email adress")]
+        [RegularExpression(InputsConfigs.EmailRegEx, ErrorMessage = "* Please Enter a valid email adress")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "* Please Enter a Work location")]
