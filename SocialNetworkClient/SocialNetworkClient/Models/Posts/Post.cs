@@ -20,5 +20,8 @@ namespace SocialNetworkClient.Models
         {
 
         }
+
+        public List<Comment> CommentList { get; set; }
+
     }
 }

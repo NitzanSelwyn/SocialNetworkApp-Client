@@ -24,6 +24,7 @@ namespace SocialNetworkClient.Services
             }
             return returnStr;
         }
+
         public string ValidateIntInput(string fieldName, string input, int minValue, int maxValue)
         {
             //validates an input, returns an empty string if the input has been approved
@@ -59,6 +60,7 @@ namespace SocialNetworkClient.Services
             }
             return returnStr;
         }
+
         public string ValidateIntInput(string fieldName, int input, int minValue, int maxValue)
         {
             //validates an input, returns an empty string if the input has been approved
@@ -90,6 +92,7 @@ namespace SocialNetworkClient.Services
             }
             return returnStr;
         }
+
         public string ValidateDoubleInput(string fieldName, double input, int minValue, int maxValue)
         {
             //validates an input, returns an empty string if the input has been approved
@@ -101,6 +104,7 @@ namespace SocialNetworkClient.Services
             }
             return returnStr;
         }
+
         public string ValidateDateInput(string fieldName, DateTime input)
         {
             //validates an input, returns an empty string if the input has been approved
@@ -112,6 +116,7 @@ namespace SocialNetworkClient.Services
 
             return returnStr;
         }
+
         public string ValidateRegEx(string fieldName,string ex,string input)
         {
             //validates an input to a regular expresssion

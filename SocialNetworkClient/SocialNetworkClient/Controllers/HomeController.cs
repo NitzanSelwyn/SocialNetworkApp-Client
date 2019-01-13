@@ -30,7 +30,7 @@ namespace SocialNetworkClient.Controllers
             if (IsTokenValid())
             {
                 User user = GetMyUser();
-                List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts,user.Username);
+                List<Post> pl = GetPosts(ApiConfigs.GetFolowersPosts, user.Username);
                 mainModel.PostList = pl;
 
                 return View("index", mainModel);
