@@ -1,5 +1,5 @@
 ﻿@model SocialNetworkClient.Models.MainModel
-@if(Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken]==null)
+@if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken] == null)
 {
     using (Html.BeginForm("ClientLogin", "Home", FormMethod.Post))
     {
@@ -7,11 +7,13 @@
         @Html.PasswordFor(model => model.UserLogin.Password, new { placeholder = "Password", @class = "form-input" })
         <input type="submit" value="Log In" />
     }
+        <a href='@Url.Action("Facebook", "Home")'>
+            <img src='https://www.grow-trees.com/images/socialpack/fbloginbutton.png' />
+        </a>
 
-    <div class="fb-login-button" data-max-rows="1" data-size="small" data-button-type="continue_with"
-         data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="true"></div>
-}
-else
-{
+   
+    }
+    else
+    {
     <a @Html.ActionLink($"Hello, {Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken]} {Session[SocialNetworkClient.Configs.MainConfigs.SessionLastnameToken]}", actionName: "UserProfile")> </a>
-}
+    }

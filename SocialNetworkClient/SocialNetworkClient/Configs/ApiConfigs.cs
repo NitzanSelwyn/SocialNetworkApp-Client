@@ -15,11 +15,14 @@ namespace SocialNetworkClient.Configs
         public const string GetFolowersPosts = "Api/Post/FolowersPosts";
         public const string EditPost = "Api/Post/edit";
         public const string DeletePost = "Api/Post";
+
         //USERS
         public const string UserLoginRoute = "Api/Users/UserLogin";
         public const string UserRegisterRoute = "Api/Users/UserRegister";
         public const string UsernameExistsRoute = "Api/Users/UsernameExists";
         public const string EditUserDetailsRoute = "Api/Users/EditUserDetails";
+
+        public const string FacebookLoginRoute = "Api/Users/FacebookLogin";
 
         //AUTH AND TOKENS
         public const string GetTokenRoute = "Api/Users/GetToken";
@@ -29,5 +32,6 @@ namespace SocialNetworkClient.Configs
         //SETTINGS
         public const string ManageRequestRoute = "Api/Settings/ManageRequest";
         public const string GetBlockedUsers = "Api/Settings/GetBlockedUsers";
+        public const string EditUserPasswordRoute="Api/Settings/ChangePassword";
     }
 }
