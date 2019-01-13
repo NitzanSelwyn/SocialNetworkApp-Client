@@ -34,6 +34,19 @@ namespace SocialNetworkClient.Controllers
             return View("UserSettings", mainModel);
         }
         [HttpGet]
+        public ActionResult ShowChangePassword(MainModel model)
+        {
+            //edits the user's password
+            if (!IsTokenValid())
+            {
+                return UnvalidTokenRoute();
+            }
+            else
+            {
+                return View("ChangePassword", mainModel);
+            }
+        }
+        [HttpGet]
         public ActionResult ShowEditDetails(MainModel model)
         {
             //edits the details of the user (except username and password)
@@ -58,22 +71,87 @@ namespace SocialNetworkClient.Controllers
             {
                 if (FeildsAreValid(model))
                 {
+                    model.LoggedInUser.Username = GetMyUser().Username;
                     Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.EditUserDetailsRoute, model.LoggedInUser);
                     if (returnTuple.Item2 == HttpStatusCode.OK)
                     {
                         JObject jobj = new JObject();
                         jobj = (JObject)returnTuple.Item1;
-                        mainModel.LoggedInUser = jobj.ToObject<User>();
+                        model.LoggedInUser = jobj.ToObject<User>();
+
                         ViewBag.SuccessMessage = "Details Updated Succesfuly";
                     }
                     else
                     {
                         ViewBag.ErrorMessage = "An Error has occurred";
                     }
-                    return View("UserSettings", mainModel);
+                    return View("UserSettings", model);
                 }
-                return View("EditDetails", mainModel);
+                return View("EditDetails", model);
             }
+        }
+        [HttpPost]
+        public ActionResult ChangePassword(MainModel model)
+        {
+            //edits the details of the user (except username and password)
+            if (!IsTokenValid())
+            {
+                return UnvalidTokenRoute();
+            }
+            else
+            {
+                model.LoggedInUser = GetMyUser();
+                if (PasswordsAreValid(model))
+                {
+                    model.EditPassword.Username = model.LoggedInUser.Username;
+                    Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.EditUserPasswordRoute, model.EditPassword);
+                    if (returnTuple.Item2 == HttpStatusCode.OK)
+                    {
+                        ViewBag.SuccessMessage = "Password Changed Succesfuly";
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "An Error has occurred";
+                    }
+                    return View("UserSettings", model);
+                }
+                return View("ChangePassword", model);
+            }
+        }
+
+        private bool PasswordsAreValid(MainModel model)
+        {
+            //validates the passwords fields
+            List<string> info = new List<string>();
+            info.Add(inputsValidator.ValidateStrInput("Last Password", model.EditPassword.LastPassword, InputsConfigs.MinGenLen, InputsConfigs.MaxGenLen));
+            info.Add(inputsValidator.ValidateStrInput("New Password", model.EditPassword.NewPassword, InputsConfigs.MinGenLen, InputsConfigs.MaxGenLen));
+            info.Add(inputsValidator.ValidateStrInput("Password Confirm", model.EditPassword.NewPasswordConfirm, InputsConfigs.MinGenLen, InputsConfigs.MaxGenLen));
+            if (model.EditPassword.NewPassword != model.EditPassword.NewPasswordConfirm)
+            {
+                info.Add("New password and confirm password dont match");
+            }
+            List<string> errors = info.Where(i => !string.IsNullOrWhiteSpace(i)).ToList();
+            if (errors.Count == 0)
+            {
+
+                if (model.LoggedInUser.Password == model.EditPassword.LastPassword)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < errors.Count; i++)
+                {
+                    ViewData[$"Error{i}"] = errors[i];
+                }
+                return false;
+            }
+
         }
 
         private bool FeildsAreValid(MainModel model)
@@ -95,11 +173,10 @@ namespace SocialNetworkClient.Controllers
             {
                 for (int i = 0; i < errors.Count; i++)
                 {
-                    ViewBag[$"Error{i}"] = errors[i];
+                    ViewData[$"Error{i}"] = errors[i];
                 }
                 return false;
             }
-
         }
 
         private ActionResult UnvalidTokenRoute()
@@ -110,8 +187,6 @@ namespace SocialNetworkClient.Controllers
             Session[MainConfigs.SessionToken] = null;
             ViewBag.ErrorMessag = "Session Timeout, Logged out of the system";
             return View("~/Views/Home/Index.cshtml");
-
-
         }
         public bool IsTokenValid()
         {

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Facebook;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SocialNetworkClient.Configs;
 using SocialNetworkClient.Containers;
 using SocialNetworkClient.Contracts;
@@ -24,7 +26,69 @@ namespace SocialNetworkClient.Controllers
             mainModel = ClientContainer.container.GetInstance<IMainModel>();
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
         }
+        private Uri RedirectUri
+        {
+            get
+            {
+                var uriBuilder = new UriBuilder(Request.Url);
+                uriBuilder.Query = null;
+                uriBuilder.Fragment = null;
+                uriBuilder.Path = Url.Action("FacebookCallBack");
+                return uriBuilder.Uri;
+            }
+        }
 
+        [AllowAnonymous]
+        public ActionResult Facebook()
+        {
+            var fb = new FacebookClient();
+            var loginUrl = fb.GetLoginUrl(new
+            {
+                client_id = MainConfigs.FacebookAppId,
+                client_secret = MainConfigs.FacebookSecretKey,
+                redirect_uri = RedirectUri.AbsoluteUri,
+                response_type = "code",
+                scope = "email"
+            });
+           return Redirect(loginUrl.AbsoluteUri);
+        
+        }
+
+        public ActionResult FacebookCallBack(string code)
+        {
+            var fb = new FacebookClient();
+            dynamic facebookResult = fb.Post("oauth/access_token", new
+            {
+                client_id = "2205509553038336",
+                client_secret = "c9905f631124307e002d2f07899f48f3",
+                redirect_uri = RedirectUri.AbsoluteUri,
+                code = code
+            });
+            var accessToken = facebookResult.access_token;
+            Session["AccessToken"] = accessToken;
+            fb.AccessToken = accessToken;
+            dynamic me = fb.Get("me?fields=link,first_name,last_name,email,id");
+            string email = me.email;
+            string firstName = me.first_name;
+            string lastName = me.last_name;
+            string userId = me.id;
+
+            FacebookUser facebookUser = new FacebookUser(userId, firstName, lastName);
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.FacebookLoginRoute, facebookUser);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                JObject jobj = new JObject();
+                jobj = (JObject)returnTuple.Item1;
+                LoginRegisterResponse obj = jobj.ToObject<LoginRegisterResponse>();
+                mainModel.LoggedInUser = obj.user;
+                SaveDetailsToSession(obj.user);
+                SaveTokenToSession(obj.token);
+                return View("Index", mainModel);
+
+            }
+          
+            return View("Index", mainModel);
+        }
         public ActionResult Index()
         {
             if (IsTokenValid())
