@@ -8,6 +8,7 @@ using SocialNetworkClient.Models;
 using SocialNetworkClient.Models.Users;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -17,7 +18,6 @@ namespace SocialNetworkClient.Controllers
 {
     public class HomeController : Controller
     {
-        public static List<Post> Posts = new List<Post>();
         public IMainModel mainModel { get; set; }
         public IHttpClient httpClient { get; set; }
 
@@ -91,7 +91,15 @@ namespace SocialNetworkClient.Controllers
         }
         public ActionResult Index()
         {
-            return View(mainModel);
+            if (IsTokenValid())
+            {
+                User user = GetMyUser();
+                List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts,user.Username);
+                mainModel.PostList = pl;
+
+                return View("index", mainModel);
+            }
+            return View("index", mainModel);
         }
 
         public ActionResult About()
@@ -209,20 +217,29 @@ namespace SocialNetworkClient.Controllers
 
         public ActionResult SendPost(MainModel model)
         {
-            if (model.LoggedInUser != null)
+            if (IsTokenValid())
             {
-                //sends a new post
-                Post newPost = new Post(model.LoggedInUser.ToString(),
-                    model.Post.Text, 0, model.Post.Image.FileName);
-
-                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.PostNewMessage, newPost);
-                if (returnTuple.Item2 == HttpStatusCode.OK)
+                model.LoggedInUser = GetMyUser();
+                if (model.LoggedInUser != null)
                 {
-                    return View("Index");
-                }
+                    //sends a new post
+                    Post post = new Post();
+                    post.Author = model.LoggedInUser.Username;
+                    post.Content = model.Post.Text;
+                    post.Image = CovertToByteArray(model.Post.Image);
 
+                    //Post newPost = new Post(model.LoggedInUser.Username,
+                    //    model.Post.Text, 0, model.Post.Image.FileName);
+
+                    Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.PostNewMessage, post);
+                    if (returnTuple.Item2 == HttpStatusCode.OK)
+                    {
+                        return View("Index",model);
+                    }
+                }
             }
-            return View("Index");
+            return View("Index",model);
+
         }
 
         public ActionResult UserProfile()
@@ -230,6 +247,8 @@ namespace SocialNetworkClient.Controllers
             if (IsTokenValid())
             {
                 mainModel.LoggedInUser = GetMyUser();
+                List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts,mainModel.LoggedInUser.Username);
+                mainModel.PostList = pl;
                 return View("UserProfile", mainModel);
             }
             else return UnvalidTokenRoute();
@@ -250,6 +269,7 @@ namespace SocialNetworkClient.Controllers
         private User GetMyUser()
         {
             //returns the user from this token
+
             Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetMyUserRoute, Session[MainConfigs.SessionToken]);
             if (returnTuple.Item2 == HttpStatusCode.OK)
             {
@@ -277,7 +297,36 @@ namespace SocialNetworkClient.Controllers
                 return false;
             }
         }
-        
 
+        private List<Post> GetPosts(string URL,string userName)
+        {
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(URL, userName);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                JArray jrr = new JArray();
+                jrr = (JArray)returnTuple.Item1;
+                return jrr.ToObject<List<Post>>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private byte[] CovertToByteArray(HttpPostedFileBase fileBase)
+        {
+            byte[] data;
+            using (Stream inputStream = fileBase.InputStream)
+            {
+                MemoryStream memoryStream = inputStream as MemoryStream;
+                if (memoryStream == null)
+                {
+                    memoryStream = new MemoryStream();
+                    inputStream.CopyTo(memoryStream);
+                }
+                data = memoryStream.ToArray();
+            }
+            return data;
+        }
     }
 }

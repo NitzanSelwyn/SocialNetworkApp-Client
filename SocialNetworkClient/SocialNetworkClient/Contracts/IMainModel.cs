@@ -1,5 +1,4 @@
 ﻿using SocialNetworkClient.Models;
-using SocialNetworkClient.Models.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,6 @@ namespace SocialNetworkClient.Contracts
     public interface IMainModel
     {
         User LoggedInUser { get; set; }
-        EditPassword EditPassword { get; set; }
+        List<Post> PostList { get; set; }
     }
 }

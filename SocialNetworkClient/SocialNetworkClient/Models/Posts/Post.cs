@@ -8,26 +8,17 @@ namespace SocialNetworkClient.Models
 {
     public class Post
     {
-        public string Text { get; set; }
-        public string PosterName { get; set; }
-        public int Likes { get; set; }
-        public List<Comment> Comments { get; set; }
-        public string ImageUrl { get; set; }
-        public Post(string PosterName,string Text, int Likes, string ImageUrl, List<Comment> Comments = null)
+        public string Author { get; set; }
+
+        public string Content { get; set; }
+
+        public byte[] Image { get; set; }
+
+        public string ImageLink { get; set; }
+
+        public Post()
         {
-            this.PosterName = PosterName;
-            this.Text = Text;
-            this.Likes = Likes;
-            this.ImageUrl = ImageUrl;
-            if (Comments != null)
-            {
-                this.Comments = Comments;
-            }
-            else
-            {
-                this.Comments = new List<Comment>();
-            }
-           
+
         }
     }
 }
