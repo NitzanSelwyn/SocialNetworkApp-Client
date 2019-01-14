@@ -87,6 +87,7 @@ namespace SocialNetworkClient.Controllers
                 return View("Index", mainModel);
 
             }
+            ViewBag.ErrorMessage = "An error has occurred.";
 
             return View("Index", mainModel);
         }
@@ -161,7 +162,35 @@ namespace SocialNetworkClient.Controllers
             //opens the register window
             return View("Register", model);
         }
+        [HttpPost]
+        public ActionResult SearchUsers(MainModel model)
+        {
+            //searches for a user
+            if (IsTokenValid())
+            {
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.SearchUsersRoute, model.SearchInput);
+                if (returnTuple.Item2 == HttpStatusCode.OK)
+                {
+                    JArray jarr = new JArray();
+                    jarr = (JArray)returnTuple.Item1;
+                    if (jarr != null)
+                    {
+                        model.SearchedUsers = jarr.ToObject<List<User>>();
+                    }
+                    return View("Index", model);
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "An error has occurred.";
+                    return View("Index", model);
+                }
+            }
+            else
+            {
+                return UnvalidTokenRoute();
+            }
 
+        }
         [HttpPost]
         public ActionResult SendRegister(MainModel model)
         {
@@ -257,7 +286,15 @@ namespace SocialNetworkClient.Controllers
             }
             else return UnvalidTokenRoute();
         }
-
+        public ActionResult Logout()
+        {
+            //logs out of the system and clears the data
+            Session[MainConfigs.SessionFirstnameToken] = null;
+            Session[MainConfigs.SessionLastnameToken] = null;
+            Session[MainConfigs.SessionToken] = null;
+            ViewBag.ErrorMessag = "Bye bye!";
+            return View("Index", mainModel);
+        }
         private ActionResult UnvalidTokenRoute()
         {
             //returns the user to the main window, with a pop message of logged out and clear the session data
