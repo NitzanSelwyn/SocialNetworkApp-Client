@@ -1,0 +1,17 @@
+﻿@model SocialNetworkClient.Models.MainModel
+
+@foreach (var item in Model.PostList)
+{
+    <div class="container">
+        <div class="card" style="width:200px">
+            <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
+            <div class="card-body">
+                <h4 class="card-title">@item.Author</h4>
+                <p class="card-text">@item.Content</p>
+                <p>
+                    like will be here
+                </p>
+            </div>
+        </div>
+    </div>
+}

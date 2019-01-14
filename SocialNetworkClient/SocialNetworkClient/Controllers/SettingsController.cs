@@ -3,6 +3,7 @@ using SocialNetworkClient.Configs;
 using SocialNetworkClient.Containers;
 using SocialNetworkClient.Contracts;
 using SocialNetworkClient.Models;
+using SocialNetworkClient.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,12 @@ namespace SocialNetworkClient.Controllers
     {
         public IMainModel mainModel { get; set; }
         public IHttpClient httpClient { get; set; }
-        public IInputsValidator inputsValidator { get; set; }
+        public InputsValidator inputsValidator { get; set; }
         public SettingsController()
         {
             mainModel = ClientContainer.container.GetInstance<IMainModel>();
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
-            inputsValidator = ClientContainer.container.GetInstance<IInputsValidator>();
+            inputsValidator = ClientContainer.container.GetInstance<InputsValidator>();
         }
         public ActionResult Index()
         {
