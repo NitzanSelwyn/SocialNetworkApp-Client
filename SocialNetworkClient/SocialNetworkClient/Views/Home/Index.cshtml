@@ -4,10 +4,11 @@
 }
 
 <div class="jumbotron">
-    @*@if (Model.LoggedInUser != null)
-        {
-            @Html.Partial("AddPost", new ViewDataDictionary(Model))
-        }*@
+  @using (Html.BeginForm("SearchUsers", "Home", FormMethod.Post))
+  {
+      @Html.EditorFor(m=>m.SearchInput)
+      <input type="submit" value="Search For Users" />
+  }
 </div>
 @if (ViewBag.ErrorMessage != null)
 {
@@ -28,7 +29,7 @@
 
     <br/>
 
-    @if (Model.PostList != null)
+    if (Model.PostList != null)
     {
         foreach (var item in Model.PostList)
         {

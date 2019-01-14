@@ -38,7 +38,7 @@ namespace SocialNetworkClient.Controllers
             //edits the user's password
             if (!IsTokenValid())
             {
-                return UnvalidTokenRoute();
+                return Logout();
             }
             else
             {
@@ -51,7 +51,7 @@ namespace SocialNetworkClient.Controllers
             //edits the details of the user (except username and password)
             if (!IsTokenValid())
             {
-                return UnvalidTokenRoute();
+                return Logout();
             }
             else
             {
@@ -64,7 +64,7 @@ namespace SocialNetworkClient.Controllers
             //edits the details of the user (except username and password)
             if (!IsTokenValid())
             {
-                return UnvalidTokenRoute();
+                return Logout();
             }
             else
             {
@@ -95,7 +95,7 @@ namespace SocialNetworkClient.Controllers
             //edits the details of the user (except username and password)
             if (!IsTokenValid())
             {
-                return UnvalidTokenRoute();
+                return Logout();
             }
             else
             {
@@ -178,7 +178,7 @@ namespace SocialNetworkClient.Controllers
             }
         }
 
-        private ActionResult UnvalidTokenRoute()
+        private ActionResult Logout()
         {
             //returns the user to the main window, with a pop message of logged out and clear the session data
             Session[MainConfigs.SessionFirstnameToken] = null;

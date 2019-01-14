@@ -50,8 +50,8 @@ namespace SocialNetworkClient.Controllers
                 response_type = "code",
                 scope = "email"
             });
-           return Redirect(loginUrl.AbsoluteUri);
-        
+            return Redirect(loginUrl.AbsoluteUri);
+
         }
 
         public ActionResult FacebookCallBack(string code)
@@ -86,7 +86,8 @@ namespace SocialNetworkClient.Controllers
                 return View("Index", mainModel);
 
             }
-          
+            ViewBag.ErrorMessage = "An error has occurred.";
+
             return View("Index", mainModel);
         }
         public ActionResult Index()
@@ -94,7 +95,7 @@ namespace SocialNetworkClient.Controllers
             if (IsTokenValid())
             {
                 User user = GetMyUser();
-                List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts,user.Username);
+                List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts, user.Username);
                 mainModel.PostList = pl;
 
                 return View("index", mainModel);
@@ -159,7 +160,35 @@ namespace SocialNetworkClient.Controllers
             //opens the register window
             return View("Register", model);
         }
+        [HttpPost]
+        public ActionResult SearchUsers(MainModel model)
+        {
+            //searches for a user
+            if (IsTokenValid())
+            {
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.SearchUsersRoute, model.SearchInput);
+                if (returnTuple.Item2 == HttpStatusCode.OK)
+                {
+                    JArray jarr = new JArray();
+                    jarr = (JArray)returnTuple.Item1;
+                    if (jarr != null)
+                    {
+                        model.SearchedUsers = jarr.ToObject<List<User>>();
+                    }
+                    return View("Index", model);
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "An error has occurred.";
+                    return View("Index", model);
+                }
+            }
+            else
+            {
+                return UnvalidTokenRoute();
+            }
 
+        }
         [HttpPost]
         public ActionResult SendRegister(MainModel model)
         {
@@ -234,11 +263,11 @@ namespace SocialNetworkClient.Controllers
                     Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.PostNewMessage, post);
                     if (returnTuple.Item2 == HttpStatusCode.OK)
                     {
-                        return View("Index",model);
+                        return View("Index", model);
                     }
                 }
             }
-            return View("Index",model);
+            return View("Index", model);
 
         }
 
@@ -247,13 +276,21 @@ namespace SocialNetworkClient.Controllers
             if (IsTokenValid())
             {
                 mainModel.LoggedInUser = GetMyUser();
-                List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts,mainModel.LoggedInUser.Username);
+                List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts, mainModel.LoggedInUser.Username);
                 mainModel.PostList = pl;
                 return View("UserProfile", mainModel);
             }
             else return UnvalidTokenRoute();
         }
-
+        public ActionResult Logout()
+        {
+            //logs out of the system and clears the data
+            Session[MainConfigs.SessionFirstnameToken] = null;
+            Session[MainConfigs.SessionLastnameToken] = null;
+            Session[MainConfigs.SessionToken] = null;
+            ViewBag.ErrorMessag = "Bye bye!";
+            return View("Index", mainModel);
+        }
         private ActionResult UnvalidTokenRoute()
         {
             //returns the user to the main window, with a pop message of logged out and clear the session data
@@ -298,7 +335,7 @@ namespace SocialNetworkClient.Controllers
             }
         }
 
-        private List<Post> GetPosts(string URL,string userName)
+        private List<Post> GetPosts(string URL, string userName)
         {
             Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(URL, userName);
             if (returnTuple.Item2 == HttpStatusCode.OK)

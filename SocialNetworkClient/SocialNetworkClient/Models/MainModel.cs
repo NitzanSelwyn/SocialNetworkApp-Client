@@ -22,5 +22,7 @@ namespace SocialNetworkClient.Models
         public EditPassword EditPassword { get; set; }
         public Dictionary<string,string> BlockedUsers { get; set; }
         public List<Post> PostList { get; set; }
+        public string SearchInput { get; set; }
+        public List<User> SearchedUsers { get; set; }
     }
 }
