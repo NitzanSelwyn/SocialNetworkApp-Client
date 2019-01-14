@@ -18,6 +18,8 @@ namespace SocialNetworkClient.Models
 
         public string ImageLink { get; set; }
 
+        public string FullName { get; set; }
+
         public Post()
         {
 
