@@ -1,0 +1,30 @@
+﻿@model SocialNetworkClient.Models.Post
+
+
+@if (Model.CommentList != null)
+{
+    foreach (var item in Model.CommentList)
+    {
+        <div>
+            @item.Text
+        </div>
+    }
+}
+@if(Model.CommentList == null)
+{
+    <div>
+        No Comments! Be The First One!
+    </div>
+}
+
+
+@using (Html.BeginForm("SendComment", "Home", FormMethod.Post))
+{
+
+    <div style="align-content: center;">
+        @Html.EditorFor(m => m.NewComment.Text)
+
+        <div class="error"> @Html.ValidationSummary()</div>
+        <input type="submit" value="Comment" />
+    </div>
+}

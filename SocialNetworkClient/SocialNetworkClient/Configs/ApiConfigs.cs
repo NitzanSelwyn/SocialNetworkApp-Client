@@ -15,6 +15,9 @@ namespace SocialNetworkClient.Configs
         public const string GetFolowersPosts = "Api/Post/FolowersPosts";
         public const string GetFollowingPosts = "Api/Post/FollowingPosts";
         public const string DeletePost = "Api/Post";
+        public const string GetPostsComments = "Api/GetPostsComments";
+        public const string CommentOnPost = "Api/Comment";
+
 
         //USERS
         public const string UserLoginRoute = "Api/Users/UserLogin";

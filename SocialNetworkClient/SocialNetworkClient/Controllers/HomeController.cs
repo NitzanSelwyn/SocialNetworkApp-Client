@@ -5,6 +5,7 @@ using SocialNetworkClient.Configs;
 using SocialNetworkClient.Containers;
 using SocialNetworkClient.Contracts;
 using SocialNetworkClient.Models;
+using SocialNetworkClient.Models.Posts;
 using SocialNetworkClient.Models.Users;
 using System;
 using System.Collections.Generic;
@@ -50,8 +51,8 @@ namespace SocialNetworkClient.Controllers
                 response_type = "code",
                 scope = "email"
             });
-           return Redirect(loginUrl.AbsoluteUri);
-        
+            return Redirect(loginUrl.AbsoluteUri);
+
         }
 
         public ActionResult FacebookCallBack(string code)
@@ -86,7 +87,7 @@ namespace SocialNetworkClient.Controllers
                 return View("Index", mainModel);
 
             }
-          
+
             return View("Index", mainModel);
         }
         public ActionResult Index()
@@ -213,6 +214,7 @@ namespace SocialNetworkClient.Controllers
             //saves the user's first and last name to the session for visualisation
             Session[MainConfigs.SessionFirstnameToken] = user.FirstName;
             Session[MainConfigs.SessionLastnameToken] = user.LastName;
+            Session[MainConfigs.SessionUsernameToken] = user.Username;
         }
 
         public ActionResult SendPost(MainModel model)
@@ -234,11 +236,11 @@ namespace SocialNetworkClient.Controllers
                     Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.PostNewMessage, post);
                     if (returnTuple.Item2 == HttpStatusCode.OK)
                     {
-                        return View("Index",model);
+                        return View("Index", model);
                     }
                 }
             }
-            return View("Index",model);
+            return View("Index", model);
 
         }
 
@@ -247,7 +249,7 @@ namespace SocialNetworkClient.Controllers
             if (IsTokenValid())
             {
                 mainModel.LoggedInUser = GetMyUser();
-                List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts,mainModel.LoggedInUser.Username);
+                List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts, mainModel.LoggedInUser.Username);
                 mainModel.PostList = pl;
                 return View("UserProfile", mainModel);
             }
@@ -298,7 +300,7 @@ namespace SocialNetworkClient.Controllers
             }
         }
 
-        private List<Post> GetPosts(string URL,string userName)
+        private List<Post> GetPosts(string URL, string userName)
         {
             Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(URL, userName);
             if (returnTuple.Item2 == HttpStatusCode.OK)
@@ -311,6 +313,17 @@ namespace SocialNetworkClient.Controllers
             {
                 return null;
             }
+        }
+
+        [OutputCache(Duration = 2000)]
+        public PartialViewResult GetPostComments(Post post)
+        {
+            if (IsTokenValid())
+            {
+                post.CommentList = GetComments(post.PostId);
+                return PartialView("Comments", post);
+            }
+            return PartialView();
         }
 
         private byte[] CovertToByteArray(HttpPostedFileBase fileBase)
@@ -328,5 +341,39 @@ namespace SocialNetworkClient.Controllers
             }
             return data;
         }
+
+        private List<Comment> GetComments(string postId)
+        {
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetPostsComments, postId);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                JArray jrr = new JArray();
+                jrr = (JArray)returnTuple.Item1;
+                return jrr.ToObject<List<Comment>>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public ActionResult SendComment(Post post)
+        {
+            if (IsTokenValid())
+            {
+                post.NewComment.postId = post.PostId;
+                post.NewComment.CommenterName = Session[MainConfigs.SessionUsernameToken].ToString();
+
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.CommentOnPost, post.NewComment);
+                if (returnTuple.Item2 == HttpStatusCode.OK)
+                {
+                    return View("Index", mainModel);
+                }
+            }
+            return UnvalidTokenRoute();
+        }
+
     }
+
 }
+

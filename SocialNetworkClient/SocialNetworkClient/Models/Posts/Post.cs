@@ -10,6 +10,8 @@ namespace SocialNetworkClient.Models
     {
         public string Author { get; set; }
 
+        public string PostId { get; set; }
+
         public string Content { get; set; }
 
         public byte[] Image { get; set; }
@@ -22,6 +24,9 @@ namespace SocialNetworkClient.Models
         }
 
         public List<Comment> CommentList { get; set; }
+
+        public Comment NewComment { get; set; }
+
 
     }
 }
