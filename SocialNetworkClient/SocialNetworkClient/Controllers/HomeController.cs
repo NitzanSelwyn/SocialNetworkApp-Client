@@ -5,6 +5,7 @@ using SocialNetworkClient.Configs;
 using SocialNetworkClient.Containers;
 using SocialNetworkClient.Contracts;
 using SocialNetworkClient.Models;
+using SocialNetworkClient.Models.Posts;
 using SocialNetworkClient.Models.Users;
 using System;
 using System.Collections.Generic;
@@ -242,6 +243,7 @@ namespace SocialNetworkClient.Controllers
             //saves the user's first and last name to the session for visualisation
             Session[MainConfigs.SessionFirstnameToken] = user.FirstName;
             Session[MainConfigs.SessionLastnameToken] = user.LastName;
+            Session[MainConfigs.SessionUsernameToken] = user.Username;
         }
 
         public ActionResult SendPost(MainModel model)
@@ -350,6 +352,17 @@ namespace SocialNetworkClient.Controllers
             }
         }
 
+        [OutputCache(Duration = 2000)]
+        public PartialViewResult GetPostComments(Post post)
+        {
+            if (IsTokenValid())
+            {
+                post.CommentList = GetComments(post.PostId);
+                return PartialView("Comments", post);
+            }
+            return PartialView();
+        }
+
         private byte[] CovertToByteArray(HttpPostedFileBase fileBase)
         {
             byte[] data;
@@ -365,5 +378,39 @@ namespace SocialNetworkClient.Controllers
             }
             return data;
         }
+
+        private List<Comment> GetComments(string postId)
+        {
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetPostsComments, postId);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                JArray jrr = new JArray();
+                jrr = (JArray)returnTuple.Item1;
+                return jrr.ToObject<List<Comment>>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public ActionResult SendComment(Post post)
+        {
+            if (IsTokenValid())
+            {
+                post.NewComment.postId = post.PostId;
+                post.NewComment.CommenterName = Session[MainConfigs.SessionUsernameToken].ToString();
+
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.CommentOnPost, post.NewComment);
+                if (returnTuple.Item2 == HttpStatusCode.OK)
+                {
+                    return View("Index", mainModel);
+                }
+            }
+            return UnvalidTokenRoute();
+        }
+
     }
+
 }
+

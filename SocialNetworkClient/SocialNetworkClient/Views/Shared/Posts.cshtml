@@ -2,16 +2,33 @@
 
 @foreach (var item in Model.PostList)
 {
-    <div class="container">
+    <div class="container" style="align-content:center;">
         <div class="card" style="width:200px">
             <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
             <div class="card-body">
                 <h4 class="card-title">@item.Author</h4>
                 <p class="card-text">@item.Content</p>
                 <p>
-                    like will be here
+                    @*like will be here*@
                 </p>
             </div>
         </div>
     </div>
+
+    @Ajax.ActionLink("Show Comments", actionName: "GetPostComments",routeValues:item,ajaxOptions: new AjaxOptions
+        {
+        HttpMethod = "POST",
+        UpdateTargetId = "targetComments",
+        InsertionMode = InsertionMode.Replace,
+
+        })
+
+    <div id="targetComments">
+
+    </div>
+
+
 }
+
+
+

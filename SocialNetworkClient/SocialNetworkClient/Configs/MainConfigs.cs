@@ -13,6 +13,7 @@ namespace SocialNetworkClient.Configs
         public const string SessionToken = "SessionToken";
         public const string SessionFirstnameToken = "FirstnameToken";
         public const string SessionLastnameToken = "LastnameToken";
+        public const string SessionUsernameToken = "UsernameToken";
 
         //Facebook Auth
         public const string FacebookAppId = "2205509553038336";

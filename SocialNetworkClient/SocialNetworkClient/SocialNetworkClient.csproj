@@ -220,6 +220,7 @@
     <Content Include="Views\Home\SettingsViews\BlockedUsers.cshtml" />
     <Content Include="Views\Home\SettingsViews\EditDetails.cshtml" />
     <Content Include="Views\Shared\Posts.cshtml" />
+    <Content Include="Views\Shared\Comments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -256,7 +257,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>65230</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44371/</IISUrl>
+          <IISUrl>https://localhost:44371</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
