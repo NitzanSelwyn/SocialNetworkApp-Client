@@ -35,7 +35,7 @@
             @Html.DisplayFor(model => model.LoggedInUser.LastName)
         </dd>
 
-      
+
         <dt>
             @Html.DisplayNameFor(model => model.LoggedInUser.Email)
         </dt>
@@ -75,7 +75,7 @@
     </dl>
 </div>
 
-<br/>
+<br />
 
 @if (Model.PostList != null)
 {
@@ -87,17 +87,25 @@
             <div class="card" style="width:400px">
                 <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
                 <div class="card-body">
-                    <h4 class="card-title">@item.Author</h4>
+                    <h4 class="card-title">@item.FullName</h4>
                     <p class="card-text">@item.Content</p>
-                    <p>
-                        <i onclick="myFunction(this)" class="fa fa-thumbs-up"></i>
-                    </p>
+                    <div id="@item.PostId">
+                    </div>
                 </div>
             </div>
         </div>
 
         <br />
+
+
+        @Ajax.ActionLink(linkText: "Show Comments", actionName: "GetPostComments",routeValues:item,ajaxOptions: new AjaxOptions
+         {
+         HttpMethod = "Post",
+         UpdateTargetId = "targetComments",
+         InsertionMode = InsertionMode.Replace
+         })
     }
+
 }
 
 

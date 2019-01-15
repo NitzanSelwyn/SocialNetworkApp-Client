@@ -28,6 +28,7 @@ namespace SocialNetworkClient.Controllers
             mainModel = new MainModel();
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
         }
+
         private Uri RedirectUri
         {
             get
@@ -163,6 +164,7 @@ namespace SocialNetworkClient.Controllers
             //opens the register window
             return View("Register", model);
         }
+
         [HttpPost]
         public ActionResult SearchUsers(MainModel model)
         {
@@ -328,6 +330,11 @@ namespace SocialNetworkClient.Controllers
                     {
                         return View("Index", model);
                     }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "An Error has acquired";
+                        return View("Index", model);
+                    }
                 }
             }
             return View("Index", model);
@@ -345,6 +352,7 @@ namespace SocialNetworkClient.Controllers
             }
             else return UnvalidTokenRoute();
         }
+
         public ActionResult Logout()
         {
             //logs out of the system and clears the data
@@ -354,6 +362,7 @@ namespace SocialNetworkClient.Controllers
             ViewBag.ErrorMessag = "Bye bye!";
             return View("Index", mainModel);
         }
+
         private ActionResult UnvalidTokenRoute()
         {
             //returns the user to the main window, with a pop message of logged out and clear the session data
