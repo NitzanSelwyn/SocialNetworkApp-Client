@@ -10,5 +10,6 @@ namespace SocialNetworkClient.Contracts
     {
         User LoggedInUser { get; set; }
         List<Post> PostList { get; set; }
+       
     }
 }

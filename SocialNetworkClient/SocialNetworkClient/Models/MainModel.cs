@@ -1,5 +1,6 @@
 ﻿using SocialNetworkClient.Contracts;
 using SocialNetworkClient.Models.Posts;
+using SocialNetworkClient.Models.RequestsAndResponses;
 using SocialNetworkClient.Models.Users;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace SocialNetworkClient.Models
         {
             BlockedUsers = new Dictionary<string, string>();
             PostList = new List<Post>();
+            UsersRep = new List<UserRepresentation>();
         }
         public User LoggedInUser { get; set; }
         public UserRegister UserRegister { get; set; }
@@ -24,5 +26,7 @@ namespace SocialNetworkClient.Models
         public List<Post> PostList { get; set; }
         public string SearchInput { get; set; }
         public List<User> SearchedUsers { get; set; }
+       public UserViewModel UserToView { get; set; }
+        public List<UserRepresentation> UsersRep { get; set; }
     }
 }

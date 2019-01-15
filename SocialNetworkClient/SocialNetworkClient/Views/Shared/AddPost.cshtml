@@ -15,3 +15,9 @@
     </div>
 
 }
+@if (ViewBag.ErrorMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.ErrorMessage");
+    </script>
+}
