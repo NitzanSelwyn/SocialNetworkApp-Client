@@ -1,0 +1,12 @@
+﻿@model SocialNetworkClient.Models.MainModel
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Blocked Users</h2>
+@foreach (var item in Model.UsersRep)
+{
+   @Html.ActionLink($"{item.FullName}","USERVIEW",item.Id) @Html.ActionLink("Unfollow","UnfollowUser",item.Id) <br /><br />
+}

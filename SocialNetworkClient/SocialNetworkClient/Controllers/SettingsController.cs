@@ -3,6 +3,7 @@ using SocialNetworkClient.Configs;
 using SocialNetworkClient.Containers;
 using SocialNetworkClient.Contracts;
 using SocialNetworkClient.Models;
+using SocialNetworkClient.Models.RequestsAndResponses;
 using SocialNetworkClient.Services;
 using System;
 using System.Collections.Generic;
@@ -179,6 +180,32 @@ namespace SocialNetworkClient.Controllers
             }
         }
 
+        public ActionResult BlockedUsers(MainModel model)
+        {
+            //views all the users that I blocked
+            if (IsTokenValid())
+            {
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetBlockedUsers, Session[MainConfigs.SessionUsernameToken]);
+                if (returnTuple.Item2 == HttpStatusCode.OK)
+                {
+                    JArray jarr = new JArray();
+                    jarr = (JArray)returnTuple.Item1;
+                    model.UsersRep = jarr.ToObject<List<UserRepresentation>>();
+                    return View("BlockedUsers", model);
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "An Error has occurred";
+                    return View("Index", model);
+                }
+            }
+            else
+            {
+                return UnvalidTokenRoute();
+            }
+
+        }
+
         private ActionResult Logout()
         {
             //returns the user to the main window, with a pop message of logged out and clear the session data
@@ -222,6 +249,15 @@ namespace SocialNetworkClient.Controllers
             //saves the user's first and last name to the session for visualisation
             Session[MainConfigs.SessionFirstnameToken] = user.FirstName;
             Session[MainConfigs.SessionLastnameToken] = user.LastName;
+        }
+        private ActionResult UnvalidTokenRoute()
+        {
+            //returns the user to the main window, with a pop message of logged out and clear the session data
+            Session[MainConfigs.SessionFirstnameToken] = null;
+            Session[MainConfigs.SessionLastnameToken] = null;
+            Session[MainConfigs.SessionToken] = null;
+            ViewBag.ErrorMessag = "Session Timeout, Logged out of the system";
+            return View("~/Views/Home/Index.cshtml");
         }
     }
 }

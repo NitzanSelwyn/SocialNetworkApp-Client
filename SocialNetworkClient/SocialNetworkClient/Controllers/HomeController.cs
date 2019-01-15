@@ -6,6 +6,7 @@ using SocialNetworkClient.Containers;
 using SocialNetworkClient.Contracts;
 using SocialNetworkClient.Models;
 using SocialNetworkClient.Models.Posts;
+using SocialNetworkClient.Models.RequestsAndResponses;
 using SocialNetworkClient.Models.Users;
 using System;
 using System.Collections.Generic;
@@ -19,12 +20,12 @@ namespace SocialNetworkClient.Controllers
 {
     public class HomeController : Controller
     {
-        public IMainModel mainModel { get; set; }
+        public MainModel mainModel { get; set; }
         public IHttpClient httpClient { get; set; }
 
         public HomeController()
         {
-            mainModel = ClientContainer.container.GetInstance<IMainModel>();
+            mainModel = new MainModel();
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
         }
 
@@ -61,8 +62,8 @@ namespace SocialNetworkClient.Controllers
             var fb = new FacebookClient();
             dynamic facebookResult = fb.Post("oauth/access_token", new
             {
-                client_id = "2205509553038336",
-                client_secret = "c9905f631124307e002d2f07899f48f3",
+                client_id = MainConfigs.FacebookAppId,
+                client_secret = MainConfigs.FacebookSecretKey,
                 redirect_uri = RedirectUri.AbsoluteUri,
                 code = code
             });
@@ -178,8 +179,28 @@ namespace SocialNetworkClient.Controllers
                     if (jarr != null)
                     {
                         model.SearchedUsers = jarr.ToObject<List<User>>();
+                        if (model.SearchedUsers.Count == 1)
+                        {
+                            model.UserToView = new UserViewModel(model.SearchedUsers[0].Username, $"{model.SearchedUsers[0].FirstName} {model.SearchedUsers[0].LastName}", null);
+                            Session["userToView"] = model.UserToView;
+                            return RedirectToAction("ViewUser", model);
+                        }
+                        else if (model.SearchedUsers.Count == 0)
+                        {
+                            ViewBag.ErrorMessage = "No users found that match this input";
+                            return View("Index", model);
+                        }
+                        else
+                        {
+                            return View("SearchedUsers", model);
+                        }
                     }
-                    return View("Index", model);
+                    else
+                    {
+                        ViewBag.ErrorMessage = "No users found that matches this input";
+                        return View("Index", model);
+                    }
+
                 }
                 else
                 {
@@ -193,7 +214,44 @@ namespace SocialNetworkClient.Controllers
             }
 
         }
+        public ActionResult ViewUser(MainModel model)
+        {
+            //Views the profile and posts of this user (if not blocked by him)
+            if (IsTokenValid())
+            {
+                model.UserToView = (UserViewModel)Session["userToView"];
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.BlockedByUsersRoute, new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), model.UserToView.Username));
+                if (returnTuple.Item2 == HttpStatusCode.OK)
+                {
+                    bool blockedMe = Convert.ToBoolean(returnTuple.Item1);
+                    if (blockedMe)
+                    {
+                        return View("BlockedView");
+                    }
+                    else
+                    {
+                        model.UserToView.Posts = GetPosts(ApiConfigs.GetUsersPosts, model.UserToView.Username);
+                        return View("UserView", model);
+                    }
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "An Error has acquired";
+                    return View("Index");
+                }
+            }
+            else
+            {
+                return UnvalidTokenRoute();
+            }
 
+        }
+        public ActionResult AnotherUserView(MainModel model)
+        {
+            //views a user after verification that he/she/it didnt block me
+            return View(model);
+
+        }
         [HttpPost]
         public ActionResult SendRegister(MainModel model)
         {
@@ -313,8 +371,6 @@ namespace SocialNetworkClient.Controllers
             Session[MainConfigs.SessionToken] = null;
             ViewBag.ErrorMessag = "Session Timeout, Logged out of the system";
             return View("Index");
-
-
         }
 
         private User GetMyUser()
@@ -332,8 +388,8 @@ namespace SocialNetworkClient.Controllers
             {
                 return null;
             }
-
         }
+
 
         public bool IsTokenValid()
         {

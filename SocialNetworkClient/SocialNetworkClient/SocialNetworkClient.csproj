@@ -166,12 +166,14 @@
     <Compile Include="Models\Posts\Post.cs" />
     <Compile Include="Models\Posts\PostUpload.cs" />
     <Compile Include="Models\RequestsAndResponses\LoginRegisterResponse.cs" />
+    <Compile Include="Models\RequestsAndResponses\UserRepresentation.cs" />
     <Compile Include="Models\RequestsAndResponses\UserRequestModel.cs" />
     <Compile Include="Models\Users\EditPassword.cs" />
     <Compile Include="Models\Users\FacebookUser.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Users\UserLogin.cs" />
     <Compile Include="Models\Users\UserRegister.cs" />
+    <Compile Include="Models\Users\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\HttpClientSender.cs" />
     <Compile Include="Services\InputsValidator.cs" />
@@ -223,10 +225,13 @@
     <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Views\Home\UserProfile.cshtml" />
     <Content Include="Views\Home\UserSettings.cshtml" />
-    <Content Include="Views\Home\SettingsViews\BlockedUsers.cshtml" />
     <Content Include="Views\Home\SettingsViews\EditDetails.cshtml" />
     <Content Include="Views\Shared\Posts.cshtml" />
     <Content Include="Views\Shared\Comments.cshtml" />
+    <Content Include="Views\Home\SearchedUsers.cshtml" />
+    <Content Include="Views\Home\BlockedView.cshtml" />
+    <Content Include="Views\Home\UserView.cshtml" />
+    <Content Include="Views\Home\SettingsViews\BlockedUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
