@@ -6,29 +6,23 @@
         <div class="card" style="width:200px">
             <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
             <div class="card-body">
-                <h4 class="card-title">@item.Author</h4>
+                <h4 class="card-title">@item.FullName @@@item.Author</h4>
                 <p class="card-text">@item.Content</p>
-                <p>
-                    @*like will be here*@
-                </p>
+                <div id="targetComments">
+                </div>
             </div>
         </div>
     </div>
 
-    @Ajax.ActionLink("Show Comments", actionName: "GetPostComments",routeValues:item,ajaxOptions: new AjaxOptions
+    @Ajax.ActionLink(linkText: "Show Comments", actionName: "GetPostComments",routeValues:item,ajaxOptions: new AjaxOptions
         {
-        HttpMethod = "POST",
+        HttpMethod = "Post",
         UpdateTargetId = "targetComments",
-        InsertionMode = InsertionMode.Replace,
-
+        InsertionMode = InsertionMode.Replace
         })
-
-    <div id="targetComments">
-
-    </div>
-
-
 }
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 
 
 

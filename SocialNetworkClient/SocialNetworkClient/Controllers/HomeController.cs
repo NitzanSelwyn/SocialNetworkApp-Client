@@ -92,6 +92,7 @@ namespace SocialNetworkClient.Controllers
 
             return View("Index", mainModel);
         }
+
         public ActionResult Index()
         {
             if (IsTokenValid())
@@ -317,6 +318,7 @@ namespace SocialNetworkClient.Controllers
                     post.Author = model.LoggedInUser.Username;
                     post.Content = model.Post.Text;
                     post.Image = CovertToByteArray(model.Post.Image);
+                    post.FullName = $"{model.LoggedInUser.FirstName} {model.LoggedInUser.LastName}";
 
                     //Post newPost = new Post(model.LoggedInUser.Username,
                     //    model.Post.Text, 0, model.Post.Image.FileName);
@@ -423,17 +425,21 @@ namespace SocialNetworkClient.Controllers
         private byte[] CovertToByteArray(HttpPostedFileBase fileBase)
         {
             byte[] data;
-            using (Stream inputStream = fileBase.InputStream)
+            if (fileBase != null)
             {
-                MemoryStream memoryStream = inputStream as MemoryStream;
-                if (memoryStream == null)
+                using (Stream inputStream = fileBase.InputStream)
                 {
-                    memoryStream = new MemoryStream();
-                    inputStream.CopyTo(memoryStream);
+                    MemoryStream memoryStream = inputStream as MemoryStream;
+                    if (memoryStream == null)
+                    {
+                        memoryStream = new MemoryStream();
+                        inputStream.CopyTo(memoryStream);
+                    }
+                    data = memoryStream.ToArray();
                 }
-                data = memoryStream.ToArray();
+                return data;
             }
-            return data;
+            return null;      
         }
 
         private List<Comment> GetComments(string postId)
