@@ -4,11 +4,11 @@
 }
 
 <div class="jumbotron">
-  @using (Html.BeginForm("SearchUsers", "Home", FormMethod.Post))
-  {
-      @Html.EditorFor(m=>m.SearchInput)
-      <input type="submit" value="Search For Users" />
-  }
+    @using (Html.BeginForm("SearchUsers", "Home", FormMethod.Post))
+    {
+        @Html.EditorFor(m => m.SearchInput)
+        <input type="submit" value="Search For Users" />
+    }
 </div>
 @if (ViewBag.ErrorMessage != null)
 {
@@ -34,7 +34,7 @@
         @Html.Partial("Posts", Model)
     }
 
-    <br/>
+    <br />
 }
 
 

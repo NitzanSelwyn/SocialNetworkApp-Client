@@ -6,7 +6,8 @@
     foreach (var item in Model.CommentList)
     {
         <div>
-            @item.Text
+            @item.CommenterName
+            <p>@item.Text</p>
         </div>
     }
 }
