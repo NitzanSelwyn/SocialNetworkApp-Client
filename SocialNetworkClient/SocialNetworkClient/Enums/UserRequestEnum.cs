@@ -11,7 +11,5 @@ namespace SocialNetworkClient.Enums
         UnBlock,
         Follow,
         UnFollow,
-        AddToFriends,
-        RemoveFromFriends
     }
 }

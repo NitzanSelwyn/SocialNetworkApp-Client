@@ -20,7 +20,6 @@ namespace SocialNetworkClient.Models.RequestsAndResponses
         }
         public UserRequestModel()
         {
-
         }
         public UserRequestModel(string userId, string onUserId)
         {

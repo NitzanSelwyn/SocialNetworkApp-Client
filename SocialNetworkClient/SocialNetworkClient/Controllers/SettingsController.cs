@@ -2,6 +2,7 @@
 using SocialNetworkClient.Configs;
 using SocialNetworkClient.Containers;
 using SocialNetworkClient.Contracts;
+using SocialNetworkClient.Enums;
 using SocialNetworkClient.Models;
 using SocialNetworkClient.Models.RequestsAndResponses;
 using SocialNetworkClient.Services;
@@ -16,12 +17,12 @@ namespace SocialNetworkClient.Controllers
 {
     public class SettingsController : Controller
     {
-        public IMainModel mainModel { get; set; }
+        public MainModel mainModel { get; set; }
         public IHttpClient httpClient { get; set; }
         public InputsValidator inputsValidator { get; set; }
         public SettingsController()
         {
-            mainModel = ClientContainer.container.GetInstance<IMainModel>();
+            mainModel = new MainModel();
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
             inputsValidator = ClientContainer.container.GetInstance<InputsValidator>();
         }
@@ -179,7 +180,41 @@ namespace SocialNetworkClient.Controllers
                 return false;
             }
         }
-
+        public ActionResult UnBlock(string username)
+        {
+            //unblocks the selected user
+            if (IsTokenValid())
+            {
+                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.UnBlock);
+                if (ManageRequest(request))
+                {
+                    ViewBag.PageMessage = "User Unblocked Successfully";
+                    return BlockedUsers(mainModel);
+                }
+                else
+                {
+                    ViewBag.PageMessage = "An Error has occurred";
+                    return BlockedUsers(mainModel);
+                }
+            }
+            else
+            {
+                return UnvalidTokenRoute();
+            }
+        }
+        public bool ManageRequest(UserRequestModel request)
+        {
+            //manages the request: Follow, Unfollow,Friend,
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.ManageRequestRoute, request);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public ActionResult BlockedUsers(MainModel model)
         {
             //views all the users that I blocked

@@ -6,7 +6,21 @@
 }
 
 <h2>Blocked Users</h2>
-@foreach (var item in Model.UsersRep)
+@if (Model.UsersRep.Count > 0)
 {
-   @Html.ActionLink($"{item.FullName}","USERVIEW",item.Id) @Html.ActionLink("Unfollow","UnfollowUser",item.Id) <br /><br />
+    foreach (var item in Model.UsersRep)
+    {
+        @Html.ActionLink($"{item.FullName}", "USERVIEW", item.Id) @Html.ActionLink("UnBlock", "UnfollowUser", item.Id) <br /><br />
+    }
+}
+else
+{
+    <h3>You dont have any blocked users in your profile</h3>
+}
+
+@if (ViewBag.PageMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.PageMessage");
+    </script>
 }
