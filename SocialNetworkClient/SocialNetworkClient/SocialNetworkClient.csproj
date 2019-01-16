@@ -163,6 +163,7 @@
     </Compile>
     <Compile Include="Models\MainModel.cs" />
     <Compile Include="Models\Posts\Comment.cs" />
+    <Compile Include="Models\Posts\Like.cs" />
     <Compile Include="Models\Posts\Post.cs" />
     <Compile Include="Models\Posts\PostUpload.cs" />
     <Compile Include="Models\RequestsAndResponses\LoginRegisterResponse.cs" />

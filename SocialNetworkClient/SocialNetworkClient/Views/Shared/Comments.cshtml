@@ -5,10 +5,11 @@
 {
     foreach (var item in Model.CommentList)
     {
-        <div>
-            @item.CommenterName
-            <p>@item.Text</p>
+        <br />
+        <div style="background-color:lightblue;">         
+            <p>@item.CommenterName -  @item.Text</p>
         </div>
+        <br />
     }
 }
 @if (Model.CommentList == null)
@@ -19,12 +20,12 @@
 }
 
 
-@using (Html.BeginForm("SendComment", "Home", FormMethod.Post))
+@using (Html.BeginForm("SendComment", "Home", FormMethod.Post,Model))
 {
-
     <div style="align-content: center;">
         @Html.EditorFor(m => m.NewComment.Text)
-
+        @Html.HiddenFor(model => model.PostId)
+        
         <div class="error"> @Html.ValidationSummary()</div>
         <input type="submit" value="Comment" />
     </div>
