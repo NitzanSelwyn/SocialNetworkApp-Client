@@ -661,6 +661,23 @@ namespace SocialNetworkClient.Controllers
 
         }
 
+        public ActionResult UnLikeAPost(Post post)
+        {
+            post.Like = new Like();
+            post.Like.postId = post.PostId;
+            post.Like.UserName = Session[MainConfigs.SessionUsernameToken].ToString();
+
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.UnLike, post.Like);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                return View("Index", mainModel);
+            }
+            return UnvalidTokenRoute();
+
+        }
+
+        
+
     }
 
 }
