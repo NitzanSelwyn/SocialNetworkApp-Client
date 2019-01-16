@@ -102,10 +102,11 @@ namespace SocialNetworkClient.Controllers
                 List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts, user.Username);
                 mainModel.PostList = pl;
 
-                return View("index", mainModel);
+                return View("index", mainModel);              
             }
             return View("index", mainModel);
         }
+
 
         public ActionResult About()
         {
@@ -113,6 +114,7 @@ namespace SocialNetworkClient.Controllers
 
             return View();
         }
+
 
         public ActionResult Contact()
         {
@@ -271,6 +273,7 @@ namespace SocialNetworkClient.Controllers
             return View(model);
 
         }
+
         [HttpPost]
         public ActionResult SendRegister(MainModel model)
         {
@@ -340,6 +343,7 @@ namespace SocialNetworkClient.Controllers
                     post.Content = model.Post.Text;
                     post.Image = CovertToByteArray(model.Post.Image);
                     post.FullName = $"{model.LoggedInUser.FirstName} {model.LoggedInUser.LastName}";
+                    post.DatePosted = DateTime.Now;
 
                     //Post newPost = new Post(model.LoggedInUser.Username,
                     //    model.Post.Text, 0, model.Post.Image.FileName);
@@ -506,6 +510,7 @@ namespace SocialNetworkClient.Controllers
             {
                 post.NewComment.postId = post.PostId;
                 post.NewComment.CommenterName = Session[MainConfigs.SessionUsernameToken].ToString();
+                post.NewComment.CommentedDate = DateTime.Now;
 
                 Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.CommentOnPost, post.NewComment);
                 if (returnTuple.Item2 == HttpStatusCode.OK)
@@ -514,6 +519,11 @@ namespace SocialNetworkClient.Controllers
                 }
             }
             return UnvalidTokenRoute();
+        }
+
+        public ActionResult LikeAPost(Post post)
+        {
+            return View("Index", mainModel);
         }
 
     }
