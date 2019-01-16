@@ -7,7 +7,8 @@
 
 <h2>User Settings</h2>
 <br />
-@Html.ActionLink("Blocked Users", "BlockedUsers") <br /><br />
+
+@Html.ActionLink("Blocked Users", "BlockedUsers","Home") <br /><br />
 @Html.ActionLink("Change Password", "ShowChangePassword") <br /><br />
 @Html.ActionLink("Edit Profile Details", "ShowEditDetails") <br /><br />
 @Html.ActionLink("My Follows", "MyFollows") <br /><br />
@@ -15,13 +16,13 @@
 
 @if (ViewBag.ErrorMessage != null)
 {
-    <script type="text/javascript">
-                alert("@ViewBag.ErrorMessage");
-    </script>
+<script type="text/javascript">
+    alert("@ViewBag.ErrorMessage");
+</script>
 }
 @if (ViewBag.SuccessMessage != null)
 {
-    <script type="text/javascript">
-                alert("@ViewBag.SuccessMessage");
-    </script>
+<script type="text/javascript">
+    alert("@ViewBag.SuccessMessage");
+</script>
 }

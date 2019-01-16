@@ -256,7 +256,7 @@ namespace SocialNetworkClient.Controllers
         }
         public ActionResult UnfollowUser(string username)
         {
-            //unblocks the selected user
+            //Unfollows the selected user
             if (IsTokenValid())
             {
                 UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.UnFollow);
@@ -277,7 +277,7 @@ namespace SocialNetworkClient.Controllers
         }
         public ActionResult FollowUser(string username)
         {
-            //unblocks the selected user
+            //Follows the selected user
             if (IsTokenValid())
             {
                 UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.Follow);
@@ -296,12 +296,12 @@ namespace SocialNetworkClient.Controllers
                 return UnvalidTokenRoute();
             }
         }
-        public ActionResult UnblockUser(string username)
+        public ActionResult UnblockUser(string id)
         {
             //unblocks the selected user
             if (IsTokenValid())
             {
-                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.UnBlock);
+                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), id, UserRequestEnum.UnBlock);
                 if (ManageRequest(request))
                 {
                     ViewBag.PageMessage = "User Unblocked Successfully";
@@ -319,13 +319,13 @@ namespace SocialNetworkClient.Controllers
         }
         public ActionResult BlockUser(string username)
         {
-            //unblocks the selected user
+            //Blocks the selected user
             if (IsTokenValid())
             {
                 UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.Block);
                 if (ManageRequest(request))
                 {
-                    ViewBag.PageMessage = "User Unblocked Successfully";
+                    ViewBag.PageMessage = "User blocked Successfully";
                 }
                 else
                 {
