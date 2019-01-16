@@ -183,7 +183,8 @@ namespace SocialNetworkClient.Controllers
                         model.SearchedUsers = jarr.ToObject<List<User>>();
                         if (model.SearchedUsers.Count == 1)
                         {
-                            return RedirectToAction("ViewUser", model.SearchedUsers[0].Username);
+                            string username = model.SearchedUsers[0].Username;
+                            return RedirectToAction("ViewUser", "Home", new { username });
                         }
                         else if (model.SearchedUsers.Count == 0)
                         {
