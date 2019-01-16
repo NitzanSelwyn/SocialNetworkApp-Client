@@ -179,65 +179,9 @@ namespace SocialNetworkClient.Controllers
                 return false;
             }
         }
-        public ActionResult UnBlock(string username)
-        {
-            //unblocks the selected user
-            if (IsTokenValid())
-            {
-                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.UnBlock);
-                if (ManageRequest(request))
-                {
-                    ViewBag.PageMessage = "User Unblocked Successfully";
-                }
-                else
-                {
-                    ViewBag.PageMessage = "An Error has occurred";
-                }
-                return BlockedUsers(mainModel);
-            }
-            else
-            {
-                return UnvalidTokenRoute();
-            }
-        }
-        public bool ManageRequest(UserRequestModel request)
-        {
-            //manages the request: Follow, Unfollow,Friend,
-            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.ManageRequestRoute, request);
-            if (returnTuple.Item2 == HttpStatusCode.OK)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public ActionResult BlockedUsers(MainModel model)
-        {
-            //views all the users that I blocked
-            if (IsTokenValid())
-            {
-                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetBlockedUsers, Session[MainConfigs.SessionUsernameToken]);
-                if (returnTuple.Item2 == HttpStatusCode.OK)
-                {
-                    JArray jarr = new JArray();
-                    jarr = (JArray)returnTuple.Item1;
-                    model.UsersRep = jarr.ToObject<List<UserRepresentation>>();
-                    return View("BlockedUsers", model);
-                }
-                else
-                {
-                    ViewBag.ErrorMessage = "An Error has occurred";
-                    return View("Index", model);
-                }
-            }
-            else
-            {
-                return UnvalidTokenRoute();
-            }
-
-        }
+        
+        
+       
 
         private ActionResult Logout()
         {
