@@ -77,7 +77,9 @@
 
 <br />
 
-@if (Model.PostList != null)
+@Html.Partial("Posts",Model)
+
+@*@if (Model.PostList != null)
 {
     foreach (var item in Model.PostList)
     {
@@ -88,9 +90,14 @@
                 <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
                 <div class="card-body">
                     <h4 class="card-title">@item.FullName</h4>
-                    <p class="card-text">@item.Content </p> <br/>
+                    <p class="card-text">@item.Content </p> <br />
                     <p class="card-text"> Posted at - @item.DatePosted</p>
                     <div id=@item.PostId>
+                    </div>
+                    <div>
+                        <button> 
+                            @Html.ActionLink("LIKE", "LikeAPost", item)
+                        </button>
                     </div>
                 </div>
 
@@ -107,6 +114,6 @@
         <br />
     }
 
-}
+}*@
 
 

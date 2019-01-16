@@ -26,7 +26,7 @@ namespace SocialNetworkClient.Models
 
         public Post()
         {
-
+            Like = new Like();
         }
 
         public List<Comment> CommentList { get; set; }
