@@ -107,14 +107,12 @@ namespace SocialNetworkClient.Controllers
             return View("index", mainModel);
         }
 
-
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
 
             return View();
         }
-
 
         public ActionResult Contact()
         {
@@ -371,6 +369,7 @@ namespace SocialNetworkClient.Controllers
             {
                 mainModel.LoggedInUser = GetMyUser();
                 List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts, mainModel.LoggedInUser.Username);
+                mainModel.PostList = new List<Post>();
                 mainModel.PostList = pl;
                 return View("UserProfile", mainModel);
             }
@@ -413,6 +412,7 @@ namespace SocialNetworkClient.Controllers
                 return null;
             }
         }
+
         private User GetUserByUsername(string username)
         {
             //returs the user that matches this username
@@ -458,13 +458,13 @@ namespace SocialNetworkClient.Controllers
                 return null;
             }
         }
-
-        [OutputCache(Duration = 2000)]
+       
         public PartialViewResult GetPostComments(Post post)
         {
             if (IsTokenValid())
             {
                 post.CommentList = GetComments(post.PostId);
+                
                 return PartialView("Comments", post);
             }
             return PartialView();
@@ -524,7 +524,17 @@ namespace SocialNetworkClient.Controllers
 
         public ActionResult LikeAPost(Post post)
         {
-            return View("Index", mainModel);
+            post.Like = new Like();
+            post.Like.postId = post.PostId;
+            post.Like.UserName = Session[MainConfigs.SessionUsernameToken].ToString();
+          
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.Like, post.Like);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                return View("Index", mainModel);
+            }
+            return UnvalidTokenRoute();
+
         }
 
     }
