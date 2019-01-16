@@ -181,9 +181,7 @@ namespace SocialNetworkClient.Controllers
                         model.SearchedUsers = jarr.ToObject<List<User>>();
                         if (model.SearchedUsers.Count == 1)
                         {
-                            model.UserToView = new UserViewModel(model.SearchedUsers[0].Username, $"{model.SearchedUsers[0].FirstName} {model.SearchedUsers[0].LastName}", null);
-                            Session["userToView"] = model.UserToView;
-                            return RedirectToAction("ViewUser", model);
+                            return RedirectToAction("ViewUser", model.SearchedUsers[0].Username);
                         }
                         else if (model.SearchedUsers.Count == 0)
                         {
@@ -214,13 +212,13 @@ namespace SocialNetworkClient.Controllers
             }
 
         }
-        public ActionResult ViewUser(MainModel model)
+        public ActionResult ViewUser(string username)
         {
             //Views the profile and posts of this user (if not blocked by him)
             if (IsTokenValid())
             {
-                model.UserToView = (UserViewModel)Session["userToView"];
-                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.BlockedByUsersRoute, new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), model.UserToView.Username));
+                User toView = GetUserByUsername(username);
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.BlockedByUsersRoute, new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(),toView.Username));
                 if (returnTuple.Item2 == HttpStatusCode.OK)
                 {
                     bool blockedMe = Convert.ToBoolean(returnTuple.Item1);
@@ -230,8 +228,12 @@ namespace SocialNetworkClient.Controllers
                     }
                     else
                     {
-                        model.UserToView.Posts = GetPosts(ApiConfigs.GetUsersPosts, model.UserToView.Username);
-                        return View("UserView", model);
+                        bool FollowingThisUser = GetUsersImFollowing().Exists(ur=>ur.Id==toView.Username);
+                        UserViewModel userToView = new UserViewModel(toView.Username, $"{toView.FirstName} {toView.LastName}", FollowingThisUser);
+                        mainModel.UserToView = userToView;
+                       userToView.Posts = GetPosts(ApiConfigs.GetUsersPosts,mainModel.UserToView.Username);
+
+                        return View("UserView", mainModel);
                     }
                 }
                 else
@@ -246,6 +248,23 @@ namespace SocialNetworkClient.Controllers
             }
 
         }
+
+        private List<UserRepresentation> GetUsersImFollowing()
+        {
+            //checks if im following this user
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetFollowingUsers, Session[MainConfigs.SessionUsernameToken]);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                JArray jarr = new JArray();
+                jarr = (JArray)returnTuple.Item1;
+                return jarr.ToObject<List<UserRepresentation>>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public ActionResult AnotherUserView(MainModel model)
         {
             //views a user after verification that he/she/it didnt block me
@@ -389,7 +408,22 @@ namespace SocialNetworkClient.Controllers
                 return null;
             }
         }
-
+        private User GetUserByUsername(string username)
+        {
+            //returs the user that matches this username
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetUserByUsername, username);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                JObject jobj = new JObject();
+                jobj = (JObject)returnTuple.Item1;
+                User user = jobj.ToObject<User>();
+                return user;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public bool IsTokenValid()
         {
@@ -448,7 +482,7 @@ namespace SocialNetworkClient.Controllers
                 }
                 return data;
             }
-            return null;      
+            return null;
         }
 
         private List<Comment> GetComments(string postId)

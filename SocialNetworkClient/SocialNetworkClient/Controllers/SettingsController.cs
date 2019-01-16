@@ -135,7 +135,6 @@ namespace SocialNetworkClient.Controllers
             List<string> errors = info.Where(i => !string.IsNullOrWhiteSpace(i)).ToList();
             if (errors.Count == 0)
             {
-
                 if (model.LoggedInUser.Password == model.EditPassword.LastPassword)
                 {
                     return true;
@@ -189,13 +188,12 @@ namespace SocialNetworkClient.Controllers
                 if (ManageRequest(request))
                 {
                     ViewBag.PageMessage = "User Unblocked Successfully";
-                    return BlockedUsers(mainModel);
                 }
                 else
                 {
                     ViewBag.PageMessage = "An Error has occurred";
-                    return BlockedUsers(mainModel);
                 }
+                return BlockedUsers(mainModel);
             }
             else
             {

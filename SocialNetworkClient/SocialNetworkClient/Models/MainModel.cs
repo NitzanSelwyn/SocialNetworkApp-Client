@@ -13,7 +13,7 @@ namespace SocialNetworkClient.Models
     {
         public MainModel()
         {
-            BlockedUsers = new Dictionary<string, string>();
+            //BlockedUsers = new Dictionary<string, string>();
             PostList = new List<Post>();
             UsersRep = new List<UserRepresentation>();
         }
@@ -22,11 +22,11 @@ namespace SocialNetworkClient.Models
         public UserLogin UserLogin { get; set; }
         public PostUpload Post { get; set; }
         public EditPassword EditPassword { get; set; }
-        public Dictionary<string,string> BlockedUsers { get; set; }
+      //  public Dictionary<string,string> BlockedUsers { get; set; }
         public List<Post> PostList { get; set; }
         public string SearchInput { get; set; }
         public List<User> SearchedUsers { get; set; }
-       public UserViewModel UserToView { get; set; }
+        public UserViewModel UserToView { get; set; }
         public List<UserRepresentation> UsersRep { get; set; }
     }
 }
