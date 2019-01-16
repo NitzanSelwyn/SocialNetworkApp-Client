@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using SocialNetworkClient.Configs;
 using SocialNetworkClient.Containers;
 using SocialNetworkClient.Contracts;
+using SocialNetworkClient.Enums;
 using SocialNetworkClient.Models;
 using SocialNetworkClient.Models.Posts;
 using SocialNetworkClient.Models.RequestsAndResponses;
@@ -86,7 +87,7 @@ namespace SocialNetworkClient.Controllers
                 mainModel.LoggedInUser = obj.user;
                 SaveDetailsToSession(obj.user);
                 SaveTokenToSession(obj.token);
-                return View("Index", mainModel);
+                return RedirectToAction("Index", mainModel);
 
             }
             ViewBag.ErrorMessage = "An error has occurred.";
@@ -102,7 +103,7 @@ namespace SocialNetworkClient.Controllers
                 List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts, user.Username);
                 mainModel.PostList = pl;
 
-                return View("index", mainModel);              
+                return View("index", mainModel);
             }
             return View("index", mainModel);
         }
@@ -136,7 +137,7 @@ namespace SocialNetworkClient.Controllers
                     model.LoggedInUser = obj.user;
                     SaveDetailsToSession(obj.user);
                     SaveTokenToSession(obj.token);
-                    return View("Index", mainModel);
+                    return RedirectToAction("Index", mainModel);
                 }
                 else
                 {
@@ -213,13 +214,135 @@ namespace SocialNetworkClient.Controllers
             }
 
         }
+        public bool ManageRequest(UserRequestModel request)
+        {
+            //manages the request: Follow, Unfollow,Friend,
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.ManageRequestRoute, request);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public ActionResult BlockedUsers(MainModel model)
+        {
+            //views all the users that I blocked
+            if (IsTokenValid())
+            {
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetBlockedUsers, Session[MainConfigs.SessionUsernameToken]);
+                if (returnTuple.Item2 == HttpStatusCode.OK)
+                {
+                    JArray jarr = new JArray();
+                    jarr = (JArray)returnTuple.Item1;
+                    model.UsersRep = jarr.ToObject<List<UserRepresentation>>();
+                    return View("BlockedUsers", model);
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "An Error has occurred";
+                    return View("Index", model);
+                }
+            }
+            else
+            {
+                return UnvalidTokenRoute();
+            }
+
+        }
+        public ActionResult UnfollowUser(string username)
+        {
+            //unblocks the selected user
+            if (IsTokenValid())
+            {
+                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.UnFollow);
+                if (ManageRequest(request))
+                {
+                    ViewBag.PageMessage = "User Unfollowed Successfully";
+                }
+                else
+                {
+                    ViewBag.PageMessage = "An Error has occurred";
+                }
+                return ViewUser(username);
+            }
+            else
+            {
+                return UnvalidTokenRoute();
+            }
+        }
+        public ActionResult FollowUser(string username)
+        {
+            //unblocks the selected user
+            if (IsTokenValid())
+            {
+                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.Follow);
+                if (ManageRequest(request))
+                {
+                    ViewBag.PageMessage = "User Followed Successfully";
+                }
+                else
+                {
+                    ViewBag.PageMessage = "An Error has occurred";
+                }
+                return ViewUser(username);
+            }
+            else
+            {
+                return UnvalidTokenRoute();
+            }
+        }
+        public ActionResult UnblockUser(string username)
+        {
+            //unblocks the selected user
+            if (IsTokenValid())
+            {
+                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.UnBlock);
+                if (ManageRequest(request))
+                {
+                    ViewBag.PageMessage = "User Unblocked Successfully";
+                }
+                else
+                {
+                    ViewBag.PageMessage = "An Error has occurred";
+                }
+                return BlockedUsers(mainModel);
+            }
+            else
+            {
+                return UnvalidTokenRoute();
+            }
+        }
+        public ActionResult BlockUser(string username)
+        {
+            //unblocks the selected user
+            if (IsTokenValid())
+            {
+                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.Block);
+                if (ManageRequest(request))
+                {
+                    ViewBag.PageMessage = "User Unblocked Successfully";
+                }
+                else
+                {
+                    ViewBag.PageMessage = "An Error has occurred";
+                }
+                return BlockedUsers(mainModel);
+            }
+            else
+            {
+                return UnvalidTokenRoute();
+            }
+        }
         public ActionResult ViewUser(string username)
         {
             //Views the profile and posts of this user (if not blocked by him)
             if (IsTokenValid())
             {
                 User toView = GetUserByUsername(username);
-                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.BlockedByUsersRoute, new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(),toView.Username));
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.BlockedByUsersRoute, new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), toView.Username));
                 if (returnTuple.Item2 == HttpStatusCode.OK)
                 {
                     bool blockedMe = Convert.ToBoolean(returnTuple.Item1);
@@ -229,10 +352,10 @@ namespace SocialNetworkClient.Controllers
                     }
                     else
                     {
-                        bool FollowingThisUser = GetUsersImFollowing().Exists(ur=>ur.Id==toView.Username);
+                        bool FollowingThisUser = GetUsersImFollowing().Exists(ur => ur.Id == toView.Username);
                         UserViewModel userToView = new UserViewModel(toView.Username, $"{toView.FirstName} {toView.LastName}", FollowingThisUser);
                         mainModel.UserToView = userToView;
-                       userToView.Posts = GetPosts(ApiConfigs.GetUsersPosts,mainModel.UserToView.Username);
+                        userToView.Posts = GetPosts(ApiConfigs.GetUsersPosts, mainModel.UserToView.Username);
 
                         return View("UserView", mainModel);
                     }
@@ -304,7 +427,7 @@ namespace SocialNetworkClient.Controllers
                             SaveTokenToSession(response.token);
                             SaveDetailsToSession(response.user);
                             ViewBag.SuccessMessage = "Registration successful";
-                            return View("Index", model);
+                            return RedirectToAction("Index", model);
                         }
                         else
                         {
@@ -459,6 +582,7 @@ namespace SocialNetworkClient.Controllers
             }
         }
        
+
         public PartialViewResult GetPostComments(Post post)
         {
             if (IsTokenValid())

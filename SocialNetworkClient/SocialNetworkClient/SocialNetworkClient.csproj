@@ -234,7 +234,10 @@
     <Content Include="Views\Home\SearchedUsers.cshtml" />
     <Content Include="Views\Home\BlockedView.cshtml" />
     <Content Include="Views\Home\UserView.cshtml" />
-    <Content Include="Views\Settings\BlockedUsers.cshtml" />
+    <Content Include="Views\Home\BlockedUsers.cshtml" />
+    <Content Include="Views\Settings\ChangePassword.cshtml" />
+    <Content Include="Views\Settings\EditDetails.cshtml" />
+    <Content Include="Views\Settings\UserSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -4,26 +4,43 @@
     ViewBag.Title = "AnotherUserView";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h2>@Model.UserToView.FullName's Profile</h2>
-@if (Model.UserToView.Posts != null)
+<br />
+@if (Model.UserToView.FollowingThisUser)
 {
-    foreach (var item in Model.UserToView.Posts)
-    {
-        <div class="container" style="align-content:center;">
-            <div class="card" style="width:200px">
-                <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
-                <div class="card-body">
-                    <h4 class="card-title">@item.Author</h4>
-                    <p class="card-text">@item.Content</p>
-                    <p>
-                        @*like will be here*@
-                    </p>
-                </div>
+    @Html.ActionLink(linkText: $"Unfollow {Model.UserToView.FullName}", actionName: "UnfollowUser", routeValues: new { Model.UserToView.Username }) <br />
+}
+else
+{
+    @Html.ActionLink(linkText: $"Follow {Model.UserToView.FullName}", actionName: "FollowUser", routeValues: new { Model.UserToView.Username }) <br />
+}
+@Html.ActionLink(linkText: $"Block {Model.UserToView.FullName}", actionName: "BlockUser", routeValues: new { Model.UserToView.Username }) <br />
+
+
+@foreach (var item in Model.UserToView.Posts)
+{
+    <div class="container" style="align-content:center;">
+        <div class="card" style="width:200px">
+            <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
+            <div class="card-body">
+                <h4 class="card-title">@item.Author</h4>
+                <p class="card-text">@item.Content</p>
+                <p>
+                    @*like will be here*@
+                </p>
             </div>
         </div>
-    }
+    </div>
 }
-else {
+
+@if (Model.UserToView.Posts.Count == 0)
+{
     <h3>This users has no posts yet</h3>
+}
+
+@if (ViewBag.PageMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.PageMessage");
+    </script>
 }
