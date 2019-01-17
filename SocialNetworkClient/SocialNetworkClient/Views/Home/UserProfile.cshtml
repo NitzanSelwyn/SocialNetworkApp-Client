@@ -70,14 +70,16 @@
 
         <dt>
             <br />
-            @Html.ActionLink("Edit Settings", "EditSettings", "Settings")
+            @Html.ActionLink(linkText: "Edit Settings",actionName: "EditSettings",controllerName: "Settings")
         </dt>
     </dl>
+    
+    @Html.Partial("Posts", Model)
+
 </div>
 
 <br />
 
-@Html.Partial("Posts",Model)
 
 
 

@@ -49,7 +49,7 @@ namespace SocialNetworkClient.Controllers
             }
         }
         [HttpGet]
-        public ActionResult ShowEditDetails(MainModel model)
+        public ActionResult ShowEditDetails()
         {
             //edits the details of the user (except username and password)
             if (!IsTokenValid())
@@ -58,6 +58,7 @@ namespace SocialNetworkClient.Controllers
             }
             else
             {
+                mainModel.LoggedInUser = GetMyUser();
                 return View("EditDetails", mainModel);
             }
         }

@@ -14,6 +14,29 @@
     }
 
 </div>
+
+
+
+
+@if (Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameToken] != null)
+{
+
+
+    @Html.Partial("AddPost",Model)
+
+    <br />
+
+    if (Model.PostList != null)
+    {
+        @Html.Partial("Posts", Model)
+    }
+
+    <br />
+}
+
+
+
+
 @if (ViewBag.ErrorMessage != null)
 {
     <script type="text/javascript">
@@ -27,19 +50,13 @@
     </script>
 }
 
-@if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken] != null)
-{
-    @Html.Partial("AddPost", Model)
 
-    <br />
 
-    if (Model.PostList != null)
-    {
-        @Html.Partial("Posts", Model)
-    }
 
-    <br />
-}
+
+
+
+
 
 
 
