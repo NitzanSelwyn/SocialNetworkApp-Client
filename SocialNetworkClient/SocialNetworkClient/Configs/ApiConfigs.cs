@@ -45,5 +45,6 @@ namespace SocialNetworkClient.Configs
         public const string GetBlockedUsers = "Api/Settings/GetBlockedUsers";
         public const string EditUserPasswordRoute = "Api/Settings/ChangePassword";
         public const string GetFollowingUsers = "Api/Settings/GetFollowingUsers";
+        public const string GetUsersThatFollowsMe = "Api/Settings/GetUsersThatFollowsMe";
     }
 }

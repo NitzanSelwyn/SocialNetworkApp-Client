@@ -252,6 +252,13 @@ namespace SocialNetworkClient.Controllers
             }
 
         }
+        public ActionResult UsersThatFollowMe()
+        {
+            //see the view of the users that follows me
+            mainModel.UsersRep = GetUsersThatFollowsMe();
+            return View(mainModel);
+            
+        }
         public ActionResult UnfollowUser(string id)
         {
             //Unfollows the selected user
@@ -381,7 +388,7 @@ namespace SocialNetworkClient.Controllers
 
         private List<UserRepresentation> GetUsersImFollowing()
         {
-            //checks if im following this user
+            //returns the users that im following
             Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetFollowingUsers, Session[MainConfigs.SessionUsernameToken]);
             if (returnTuple.Item2 == HttpStatusCode.OK)
             {
@@ -394,7 +401,21 @@ namespace SocialNetworkClient.Controllers
                 return null;
             }
         }
-
+        private List<UserRepresentation> GetUsersThatFollowsMe()
+        {
+            //gets the users that follows me
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetUsersThatFollowsMe, Session[MainConfigs.SessionUsernameToken]);
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                JArray jarr = new JArray();
+                jarr = (JArray)returnTuple.Item1;
+                return jarr.ToObject<List<UserRepresentation>>();
+            }
+            else
+            {
+                return null;
+            }
+        }
         public ActionResult AnotherUserView(MainModel model)
         {
             //views a user after verification that he/she/it didnt block me
