@@ -20,11 +20,6 @@ else
 @Html.Partial("Posts", Model)
 
 
-@if (Model.UserToView.Posts.Count == 0)
-{
-    <h3>This users has no posts yet</h3>
-}
-
 @if (ViewBag.PageMessage != null)
 {
     <script type="text/javascript">

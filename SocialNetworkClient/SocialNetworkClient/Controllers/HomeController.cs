@@ -102,6 +102,7 @@ namespace SocialNetworkClient.Controllers
                 User user = GetMyUser();
                 List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts, user.Username);
                 mainModel.PostList = pl;
+                
 
                 return View("index", mainModel);
             }
@@ -214,6 +215,7 @@ namespace SocialNetworkClient.Controllers
             }
 
         }
+
         public bool ManageRequest(UserRequestModel request)
         {
             //manages the request: Follow, Unfollow,Friend,
@@ -227,6 +229,7 @@ namespace SocialNetworkClient.Controllers
                 return false;
             }
         }
+
         public ActionResult BlockedUsers(MainModel model)
         {
             //views all the users that I blocked
@@ -252,6 +255,7 @@ namespace SocialNetworkClient.Controllers
             }
 
         }
+
         public ActionResult UsersThatFollowMe()
         {
             //see the view of the users that follows me
@@ -280,6 +284,7 @@ namespace SocialNetworkClient.Controllers
                 return UnvalidTokenRoute();
             }
         }
+
         public ActionResult FollowUser(string username)
         {
             //Follows the selected user
@@ -301,12 +306,14 @@ namespace SocialNetworkClient.Controllers
                 return UnvalidTokenRoute();
             }
         }
+
         public ActionResult UsersImFollowing()
         {
             //shows the view of the users im following
             mainModel.UsersRep = GetUsersImFollowing();
             return View(mainModel);
         }
+
         public ActionResult UnblockUser(string id)
         {
             //unblocks the selected user
@@ -328,6 +335,7 @@ namespace SocialNetworkClient.Controllers
                 return UnvalidTokenRoute();
             }
         }
+
         public ActionResult BlockUser(string username)
         {
             //Blocks the selected user
@@ -349,6 +357,7 @@ namespace SocialNetworkClient.Controllers
                 return UnvalidTokenRoute();
             }
         }
+
         public ActionResult ViewUser(string username)
         {
             //Views the profile and posts of this user (if not blocked by him)
@@ -368,7 +377,8 @@ namespace SocialNetworkClient.Controllers
                         bool FollowingThisUser = GetUsersImFollowing().Exists(ur => ur.Id == toView.Username);
                         UserViewModel userToView = new UserViewModel(toView.Username, $"{toView.FirstName} {toView.LastName}", FollowingThisUser);
                         mainModel.UserToView = userToView;
-                        userToView.Posts = GetPosts(ApiConfigs.GetUsersPosts, mainModel.UserToView.Username);
+
+                        mainModel.PostList = GetPosts(ApiConfigs.GetUsersPosts, mainModel.UserToView.Username);
 
                         return View("UserView", mainModel);
                     }
@@ -520,7 +530,12 @@ namespace SocialNetworkClient.Controllers
                 mainModel.LoggedInUser = GetMyUser();
                 List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts, mainModel.LoggedInUser.Username);
                 mainModel.PostList = new List<Post>();
+                var userViewModel = new UserViewModel();
                 mainModel.PostList = pl;
+                mainModel.UserToView = userViewModel;
+
+
+
                 return View("UserProfile", mainModel);
             }
             else return UnvalidTokenRoute();
@@ -608,7 +623,7 @@ namespace SocialNetworkClient.Controllers
                 return null;
             }
         }
-       
+
         public PartialViewResult GetPostComments(Post post)
         {
             if (IsTokenValid())

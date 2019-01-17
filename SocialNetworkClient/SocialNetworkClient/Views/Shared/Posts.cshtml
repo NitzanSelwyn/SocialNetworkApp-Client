@@ -2,19 +2,18 @@
 
 
 
-
 @foreach (var item in Model.PostList)
 {
     <br />
-
     <div class="container">
         <div class="card" style="width:200px;align-content:center; background-color:gray;">
             <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
             <div class="card-body">
-                <h4 class="card-title">@Html.ActionLink(item.FullName,"UserProfile")</h4>
-                <h4>Numbers Of Likes @item.Like.UsersWhoLiked.Count</h4>
+                <h4 class="card-title">@Html.ActionLink(linkText: item.FullName,actionName: "ViewUser",routeValues: new { username= item.Author })</h4>
+                <h4> @item.Like.UsersWhoLiked.Count Likes</h4>
                 <p class="card-text">@item.Content</p> <br />
                 <p class="card-text">Posted at - @item.DatePosted</p>
+
                 <div id=@item.PostId>
                 </div>
                 <div>
@@ -22,6 +21,7 @@
                     {
                         <button>
                             @Html.ActionLink("UnLike", "UnLikeAPost", item)
+
                         </button>
                     }
                     else
