@@ -582,7 +582,6 @@ namespace SocialNetworkClient.Controllers
             }
         }
        
-
         public PartialViewResult GetPostComments(Post post)
         {
             if (IsTokenValid())
@@ -675,8 +674,6 @@ namespace SocialNetworkClient.Controllers
             return UnvalidTokenRoute();
 
         }
-
-        
 
     }
 

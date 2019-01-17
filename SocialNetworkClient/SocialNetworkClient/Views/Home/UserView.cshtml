@@ -17,21 +17,8 @@ else
 @Html.ActionLink(linkText: $"Block {Model.UserToView.FullName}", actionName: "BlockUser", routeValues: new { Model.UserToView.Username }) <br />
 
 
-@foreach (var item in Model.UserToView.Posts)
-{
-    <div class="container" style="align-content:center;">
-        <div class="card" style="width:200px">
-            <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
-            <div class="card-body">
-                <h4 class="card-title">@item.Author</h4>
-                <p class="card-text">@item.Content</p>
-                <p>
-                    @*like will be here*@
-                </p>
-            </div>
-        </div>
-    </div>
-}
+@Html.Partial("Posts", Model)
+
 
 @if (Model.UserToView.Posts.Count == 0)
 {

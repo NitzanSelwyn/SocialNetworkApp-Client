@@ -79,41 +79,5 @@
 
 @Html.Partial("Posts",Model)
 
-@*@if (Model.PostList != null)
-{
-    foreach (var item in Model.PostList)
-    {
-        <br />
-
-        <div class="container">
-            <div class="card" style="width:200px;background-color:gray; align-content:center;">
-                <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
-                <div class="card-body">
-                    <h4 class="card-title">@item.FullName</h4>
-                    <p class="card-text">@item.Content </p> <br />
-                    <p class="card-text"> Posted at - @item.DatePosted</p>
-                    <div id=@item.PostId>
-                    </div>
-                    <div>
-                        <button> 
-                            @Html.ActionLink("LIKE", "LikeAPost", item)
-                        </button>
-                    </div>
-                </div>
-
-                @Ajax.ActionLink(linkText: "Show Comments", actionName: "GetPostComments",routeValues:item,ajaxOptions: new AjaxOptions
-                 {
-                 HttpMethod = "Post",
-                 UpdateTargetId = @item.PostId,
-                 InsertionMode = InsertionMode.Replace
-                 })
-            </div>
-
-        </div>
-
-        <br />
-    }
-
-}*@
 
 
