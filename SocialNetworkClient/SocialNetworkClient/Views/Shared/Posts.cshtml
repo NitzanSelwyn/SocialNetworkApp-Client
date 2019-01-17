@@ -11,11 +11,26 @@
         <div class="card" style="width:200px;align-content:center; background-color:gray;">
             <img class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
             <div class="card-body">
-                <h4 class="card-title">@item.FullName</h4>
+                <h4 class="card-title">@Html.ActionLink(item.FullName,"UserProfile")</h4>
                 <h4>Numbers Of Likes @item.Like.UsersWhoLiked.Count</h4>
                 <p class="card-text">@item.Content</p> <br />
                 <p class="card-text">Posted at - @item.DatePosted</p>
                 <div id=@item.PostId>
+                </div>
+                <div>
+                    @if (item.Like.UsersWhoLiked.Contains(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameToken]))
+                    {
+                        <button>
+                            @Html.ActionLink("UnLike", "UnLikeAPost", item)
+                        </button>
+                    }
+                    else
+                    {
+                        <button>
+                            @Html.ActionLink("Like", "LikeAPost", item)
+                        </button>
+                    }
+
                 </div>
             </div>
             @Ajax.ActionLink(linkText: "Show Comments", actionName: "GetPostComments",routeValues:item,ajaxOptions: new AjaxOptions
