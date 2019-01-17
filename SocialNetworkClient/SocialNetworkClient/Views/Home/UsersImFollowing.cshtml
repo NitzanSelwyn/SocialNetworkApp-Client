@@ -1,0 +1,27 @@
+﻿@model SocialNetworkClient.Models.MainModel
+
+@{
+    ViewBag.Title = "FollowingUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Users I'm Following</h2>
+@if (Model.UsersRep.Count > 0)
+{
+    foreach (var item in Model.UsersRep)
+    {
+        @Html.ActionLink(linkText: $"{item.FullName}", actionName: "ViewUser", routeValues: new { item.Id })
+        @Html.ActionLink("UnFollow", "UnfollowUser", new { item.Id }) <br /><br />
+    }
+}
+else
+{
+    <h3>You are not following any users at the moment</h3>
+}
+
+@if (ViewBag.PageMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.PageMessage");
+    </script>
+}

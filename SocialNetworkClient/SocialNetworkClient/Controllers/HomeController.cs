@@ -252,12 +252,12 @@ namespace SocialNetworkClient.Controllers
             }
 
         }
-        public ActionResult UnfollowUser(string username)
+        public ActionResult UnfollowUser(string id)
         {
             //Unfollows the selected user
             if (IsTokenValid())
             {
-                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.UnFollow);
+                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), id, UserRequestEnum.UnFollow);
                 if (ManageRequest(request))
                 {
                     ViewBag.PageMessage = "User Unfollowed Successfully";
@@ -266,7 +266,7 @@ namespace SocialNetworkClient.Controllers
                 {
                     ViewBag.PageMessage = "An Error has occurred";
                 }
-                return ViewUser(username);
+                return ViewUser(id);
             }
             else
             {
@@ -293,6 +293,12 @@ namespace SocialNetworkClient.Controllers
             {
                 return UnvalidTokenRoute();
             }
+        }
+        public ActionResult UsersImFollowing()
+        {
+            //shows the view of the users im following
+            mainModel.UsersRep = GetUsersImFollowing();
+            return View(mainModel);
         }
         public ActionResult UnblockUser(string id)
         {
@@ -581,14 +587,14 @@ namespace SocialNetworkClient.Controllers
                 return null;
             }
         }
-       
+
 
         public PartialViewResult GetPostComments(Post post)
         {
             if (IsTokenValid())
             {
                 post.CommentList = GetComments(post.PostId);
-                
+
                 return PartialView("Comments", post);
             }
             return PartialView();
@@ -651,7 +657,7 @@ namespace SocialNetworkClient.Controllers
             post.Like = new Like();
             post.Like.postId = post.PostId;
             post.Like.UserName = Session[MainConfigs.SessionUsernameToken].ToString();
-          
+
             Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.Like, post.Like);
             if (returnTuple.Item2 == HttpStatusCode.OK)
             {

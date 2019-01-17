@@ -238,6 +238,7 @@
     <Content Include="Views\Settings\ChangePassword.cshtml" />
     <Content Include="Views\Settings\EditDetails.cshtml" />
     <Content Include="Views\Settings\UserSettings.cshtml" />
+    <Content Include="Views\Home\UsersImFollowing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
