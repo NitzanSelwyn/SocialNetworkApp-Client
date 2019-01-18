@@ -102,7 +102,7 @@ namespace SocialNetworkClient.Controllers
                 User user = GetMyUser();
                 List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts, user.Username);
                 mainModel.PostList = pl;
-                
+
 
                 return View("index", mainModel);
             }
@@ -130,8 +130,7 @@ namespace SocialNetworkClient.Controllers
             Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.UserLoginRoute, model.UserLogin);
             if (returnTuple.Item2 == HttpStatusCode.OK)
             {
-                if (returnTuple.Item1 != null)
-                {
+               
                     JObject jobj = new JObject();
                     jobj = (JObject)returnTuple.Item1;
                     LoginRegisterResponse obj = jobj.ToObject<LoginRegisterResponse>();
@@ -139,12 +138,12 @@ namespace SocialNetworkClient.Controllers
                     SaveDetailsToSession(obj.user);
                     SaveTokenToSession(obj.token);
                     return RedirectToAction("Index", mainModel);
-                }
-                else
-                {
-                    ViewBag.ErrorMessage = "Username or password are unvalid.";
-                    return View("Index", mainModel);
-                }
+                
+            }
+            else if (returnTuple.Item2 == HttpStatusCode.Conflict)
+            {
+                ViewBag.ErrorMessage = "Username or password are unvalid.";
+                return View("Index", mainModel);
             }
             else
             {
@@ -261,7 +260,7 @@ namespace SocialNetworkClient.Controllers
             //see the view of the users that follows me
             mainModel.UsersRep = GetUsersThatFollowsMe();
             return View(mainModel);
-            
+
         }
         public ActionResult UnfollowUser(string id)
         {
@@ -290,6 +289,11 @@ namespace SocialNetworkClient.Controllers
             //Follows the selected user
             if (IsTokenValid())
             {
+                if (username == Session[MainConfigs.SessionUsernameToken].ToString())
+                {
+                    ViewBag.PageMessage = "Dont try to follow yourself";
+                    return ViewUser(username);
+                }
                 UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.Follow);
                 if (ManageRequest(request))
                 {
@@ -341,6 +345,11 @@ namespace SocialNetworkClient.Controllers
             //Blocks the selected user
             if (IsTokenValid())
             {
+                if (username == Session[MainConfigs.SessionUsernameToken].ToString())
+                {
+                    ViewBag.PageMessage = "Dont try to block yourself";
+                    return ViewUser(username);
+                }
                 UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.Block);
                 if (ManageRequest(request))
                 {
@@ -557,7 +566,7 @@ namespace SocialNetworkClient.Controllers
             Session[MainConfigs.SessionFirstnameToken] = null;
             Session[MainConfigs.SessionLastnameToken] = null;
             Session[MainConfigs.SessionToken] = null;
-            ViewBag.ErrorMessag = "Session Timeout, Logged out of the system";
+            ViewBag.ErrorMessage = "Session Timeout, Logged out of the system";
             return View("Index");
         }
 

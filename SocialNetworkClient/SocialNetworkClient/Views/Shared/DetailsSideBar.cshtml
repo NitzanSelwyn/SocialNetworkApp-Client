@@ -1,0 +1,34 @@
+﻿@model SocialNetworkClient.Models.MainModel
+
+
+@{
+    int current = DateTime.Now.Hour;
+    string returnStr = "Good ";
+    if (current >= 6 && current < 11)
+    {
+        returnStr += "Morning, ";
+    }
+    else if (current >= 11 && current < 17)
+    {
+        returnStr += "After Noon, ";
+    }
+    else if (current >= 17 && current < 21)
+    {
+        returnStr += "Evening, ";
+    }
+    else if (current >= 21 || current < 6)
+    {
+        returnStr += "Night, ";
+    }
+    string userDetails = $"{Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken]}  {Session[SocialNetworkClient.Configs.MainConfigs.SessionLastnameToken]}";
+}
+<div class="container-fluid" style="margin-left:12px">
+    <br />
+    <div style="font-size:16px; color:steelblue;font-weight:bold">@returnStr </div>
+    <div style="font-size:16px; color:steelblue;font-weight:bold">@userDetails </div>
+    <br />
+    <input type="button" style="font-size:14px;height:30px" class="btn btn-warning btn-sm active" value="My Profile" onclick="location.href='@Url.Action("UserProfile", "Home")'" /> <br /><br />
+    <input type="button" style="font-size:14px;height:30px" class="btn btn-primary btn-sm active" value="My Settings" onclick="location.href='@Url.Action("EditSettings", "Settings")'" /> <br /><br />
+    <input type="button" style="font-size:14px;height:30px" class="btn btn-danger btn-sm active" value="Logout" onclick="location.href='@Url.Action("Logout", "Home")'" />
+
+</div>

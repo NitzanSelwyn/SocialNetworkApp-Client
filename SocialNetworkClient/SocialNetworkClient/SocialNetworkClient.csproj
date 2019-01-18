@@ -239,6 +239,7 @@
     <Content Include="Views\Settings\UserSettings.cshtml" />
     <Content Include="Views\Home\UsersImFollowing.cshtml" />
     <Content Include="Views\Home\UsersThatFollowMe.cshtml" />
+    <Content Include="Views\Shared\DetailsSideBar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

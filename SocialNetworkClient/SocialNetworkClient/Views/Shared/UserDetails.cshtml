@@ -5,20 +5,9 @@
     {
         @Html.TextBoxFor(m => m.UserLogin.Username, new { placeholder = "Username", @class = "form-input" })
         @Html.PasswordFor(model => model.UserLogin.Password, new { placeholder = "Password", @class = "form-input" })
-        <input height="50" type="submit" value="Log In" />
+        <input style="font-size:18px;height:50px" class="btn btn-success btn-sm active" type="submit" value="Log In" />
         <a href='@Url.Action("Facebook", "Home")'>
             <img height="50" src='https://www.grow-trees.com/images/socialpack/fbloginbutton.png' />
         </a>
     }
-}
-else
-{
-
-    <span>
-        <a @Html.ActionLink($"Hello, {Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken]} {Session[SocialNetworkClient.Configs.MainConfigs.SessionLastnameToken]}", actionName: "UserProfile")> </a>
-
-        <a href='@Url.Action("Logout", "Home")'>
-            <img height="50" src='https://i0.wp.com/sharojit.com/wp-content/uploads/2017/03/logout.png?fit=825%2C510&ssl=1' />
-        </a>
-    </span>
 }

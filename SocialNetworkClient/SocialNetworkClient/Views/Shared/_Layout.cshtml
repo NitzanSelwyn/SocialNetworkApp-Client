@@ -4,13 +4,19 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Social Network</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link href="~/Styles/Styles1.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.8.3.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/mvc/3.0/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://getbootstrap.com/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+    <script src="https://getbootstrap.com/assets/js/vendor/holder.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -21,28 +27,36 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("SocialNetwork", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Social Network", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
 
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home",Model)</li>
+                    <li>@Html.ActionLink("Home", "Index", "Home", Model)</li>
+                    <li>@Html.Partial("UserDetails")</li>
                     @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken] == null)
                     {
-                        <li>@Html.ActionLink("Register", "OpenRegister", "Home")</li>
+
+                        <input type="button" style="font-size:18px;height:50px" id="register" class="btn btn-warning btn-sm active" value="Register" onclick="location.href='@Url.Action("OpenRegister", "Home")'" />
+                       
                     }
-                    
-                    <li>@Html.Partial("UserDetails")</li>
-                    
+
                 </ul>
             </div>
         </div>
     </div>
-    <div class="container body-content">
+    @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken] != null)
+    {
+        <div style="position:fixed;background-image:url(https://image.freepik.com/free-vector/abstract-design-background_1048-6726.jpg) ;width:200px;height:1000px">
+            @Html.Partial("DetailsSideBar")
+        </div>
+    }
+
+    <div style='margin-left:200px' class="container body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Nitzan Selwin & Shahaf Dahan's Social Network </p>
         </footer>
     </div>
 

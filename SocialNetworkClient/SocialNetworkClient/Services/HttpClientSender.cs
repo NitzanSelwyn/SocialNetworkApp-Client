@@ -58,7 +58,15 @@ namespace SocialNetworkClient.Services
         {
             client.BaseAddress = new Uri(MainConfigs.Url);
             client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            try
+            {
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            }
+            catch (Exception e)
+            {
+                //MediaTypeWithQualityHeaderValue already added (somehow...)
+            }
+
         }
     }
 }
