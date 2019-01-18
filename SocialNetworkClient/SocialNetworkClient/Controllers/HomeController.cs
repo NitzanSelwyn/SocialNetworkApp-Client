@@ -27,6 +27,7 @@ namespace SocialNetworkClient.Controllers
         public HomeController()
         {
             mainModel = new MainModel();
+
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
         }
 

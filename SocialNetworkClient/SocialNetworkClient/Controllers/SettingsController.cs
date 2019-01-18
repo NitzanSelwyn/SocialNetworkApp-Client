@@ -23,6 +23,7 @@ namespace SocialNetworkClient.Controllers
         public SettingsController()
         {
             mainModel = new MainModel();
+
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
             inputsValidator = ClientContainer.container.GetInstance<InputsValidator>();
         }
