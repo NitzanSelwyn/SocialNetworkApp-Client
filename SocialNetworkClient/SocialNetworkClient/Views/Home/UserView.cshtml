@@ -8,13 +8,13 @@
 <br />
 @if (Model.UserToView.FollowingThisUser)
 {
-    @Html.ActionLink(linkText: $"Unfollow {Model.UserToView.FullName}", actionName: "UnfollowUser", routeValues: new { Model.UserToView.Username }) <br />
+    @Html.ActionLink(linkText: $"Unfollow {Model.UserToView.FullName}", actionName: "UnfollowUser", routeValues: new {id= Model.UserToView.Username }) <br />
 }
 else
 {
-    @Html.ActionLink(linkText: $"Follow {Model.UserToView.FullName}", actionName: "FollowUser", routeValues: new { Model.UserToView.Username }) <br />
+    @Html.ActionLink(linkText: $"Follow {Model.UserToView.FullName}", actionName: "FollowUser", routeValues: new {id= Model.UserToView.Username }) <br />
 }
-@Html.ActionLink(linkText: $"Block {Model.UserToView.FullName}", actionName: "BlockUser", routeValues: new { Model.UserToView.Username }) <br />
+@Html.ActionLink(linkText: $"Block {Model.UserToView.FullName}", actionName: "BlockUser", routeValues: new {id= Model.UserToView.Username }) <br />
 
 
 @Html.Partial("Posts", Model)

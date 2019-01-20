@@ -17,7 +17,7 @@
                 <div id=@item.PostId>
                 </div>
                 <div>
-                    @if (item.Like.UsersWhoLiked.Contains(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameToken]))
+                    @if (item.Like.UsersWhoLiked.Contains(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey]))
                     {
                         <button>
                             @Html.ActionLink("UnLike", "UnLikeAPost", item)

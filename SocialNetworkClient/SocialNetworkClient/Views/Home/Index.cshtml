@@ -4,7 +4,7 @@
 }
 
 <div class="jumbotron">
-    @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken] != null)
+    @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey] != null)
     {
         using (Html.BeginForm("SearchUsers", "Home", FormMethod.Post))
         {
@@ -18,7 +18,7 @@
 
 
 
-@if (Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameToken] != null)
+@if (Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey] != null)
 {
 
 
