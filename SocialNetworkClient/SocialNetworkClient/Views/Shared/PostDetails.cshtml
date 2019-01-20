@@ -1,0 +1,60 @@
+﻿@model SocialNetworkClient.Models.Post
+
+<br />
+<div class="container" id="postDetils">
+    <div class="card" style="width:200px;align-content:center; background-color:gray;">
+        @if (Model.ImageLink != string.Empty)
+        {
+            <img style="width:100%" class="card-img-top" src="@Model.ImageLink" alt="Card image">
+        }
+        <div class="card-body">
+            <h4 class="card-title">@Html.ActionLink(linkText: Model.FullName, actionName: "ViewUser", routeValues: new { username = Model.Author })</h4>
+            <h4> @Model.Like.UsersWhoLiked.Count Likes</h4>
+            <p class="card-text">@Model.Content</p> <br />
+            <p class="card-text">Posted at - @Model.DatePosted</p>
+
+            <div id=@Model.PostId>
+            </div>
+            <div>
+                @if (Model.Like.UsersWhoLiked.Contains(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameToken]))
+                {
+                    <button class="btn btn-danger" style="color:white;">
+                        @Ajax.ActionLink(linkText: "UnLike", actionName: "UnLikeAPost", routeValues: Model, ajaxOptions: new AjaxOptions
+                   {
+                       HttpMethod = "Post",
+                       UpdateTargetId = "postDetils",
+                       InsertionMode = InsertionMode.Replace
+                   })
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-default">
+                        @Ajax.ActionLink(linkText: "Like", actionName: "LikeAPost", routeValues: Model, ajaxOptions: new AjaxOptions
+                   {
+                       HttpMethod = "Post",
+                       UpdateTargetId = "postDetils",
+                       InsertionMode = InsertionMode.Replace
+                   })
+                    </button>
+                }
+
+            </div>
+        </div>
+        @Ajax.ActionLink(linkText: "Show Comments", actionName: "GetPostComments",routeValues: Model, ajaxOptions: new AjaxOptions
+   {
+       HttpMethod = "Post",
+       UpdateTargetId = Model.PostId,
+       InsertionMode = InsertionMode.Replace
+   })
+
+      
+
+
+    </div>
+</div>
+
+<br />
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>

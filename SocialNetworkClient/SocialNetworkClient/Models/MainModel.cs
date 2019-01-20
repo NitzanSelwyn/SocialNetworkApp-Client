@@ -15,6 +15,7 @@ namespace SocialNetworkClient.Models
         {
             PostList = new List<Post>();
             UsersRep = new List<UserRepresentation>();
+           
         }
         public User LoggedInUser { get; set; }
         public UserRegister UserRegister { get; set; }
@@ -26,5 +27,6 @@ namespace SocialNetworkClient.Models
         public List<User> SearchedUsers { get; set; }
         public UserViewModel UserToView { get; set; }
         public List<UserRepresentation> UsersRep { get; set; }
+        public int PostCounter { get; set; }
     }
 }

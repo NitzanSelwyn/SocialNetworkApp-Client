@@ -73,7 +73,17 @@
         </dt>
     </dl>
 
-    @Html.Partial("Posts", Model)
+    <div id="postList">
+        @Html.Partial("Posts", Model)
+    </div>
+
+
+    @Ajax.ActionLink(linkText: "Load More", actionName: "LoadMoreInrofile", routeValues:Model, ajaxOptions: new AjaxOptions
+    {
+    HttpMethod = "Post",
+    UpdateTargetId = "postList",
+    InsertionMode = InsertionMode.InsertAfter
+    })
 
 </div>
 
