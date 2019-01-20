@@ -4,46 +4,15 @@
 
 @foreach (var item in Model.PostList)
 {
-    <br />
-    <div class="container">
-        <div class="card" style="width:200px;align-content:center; background-color:gray;">
-            <img style="max-height:150px" class="card-img-top" src="@item.ImageLink" alt="Card image" style="width:100%">
-            <div class="card-body">
-                <h4 class="card-title">@Html.ActionLink(linkText: item.FullName,actionName: "ViewUser",routeValues: new { username= item.Author })</h4>
-                <h4> @item.Like.UsersWhoLiked.Count Likes</h4>
-                <p class="card-text">@item.Content</p> <br />
-                <p class="card-text">Posted at - @item.DatePosted</p>
 
-                <div id=@item.PostId>
-                </div>
-                <div>
-                    @if (item.Like.UsersWhoLiked.Contains(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey]))
-                    {
-                        <button>
-                            @Html.ActionLink("UnLike", "UnLikeAPost", item)
-
-                        </button>
-                    }
-                    else
-                    {
-                        <button>
-                            @Html.ActionLink("Like", "LikeAPost", item)
-                        </button>
-                    }
-
-                </div>
-            </div>
-            @Ajax.ActionLink(linkText: "Show Comments", actionName: "GetPostComments",routeValues:item,ajaxOptions: new AjaxOptions
-                {
-                HttpMethod = "Post",
-                UpdateTargetId = item.PostId,
-                InsertionMode = InsertionMode.Replace
-                })
-        </div>
-    </div>
-
-    <br />
+    @Html.Partial("PostDetails", item)
+   
 }
+
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 
 
 

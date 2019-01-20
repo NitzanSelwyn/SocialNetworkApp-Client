@@ -28,5 +28,6 @@ namespace SocialNetworkClient.Models
         public UserViewModel UserToView { get; set; }
         public List<UserRepresentation> UsersRep { get; set; }
         public List<Notification> Notifications { get; set; }
+        public int PostCounter { get; set; }
     }
 }

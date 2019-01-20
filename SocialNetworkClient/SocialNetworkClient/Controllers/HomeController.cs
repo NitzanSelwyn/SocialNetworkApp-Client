@@ -27,7 +27,10 @@ namespace SocialNetworkClient.Controllers
         public HomeController()
         {
             mainModel = new MainModel();
+            
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
+
+           
         }
 
         private Uri RedirectUri
@@ -100,9 +103,10 @@ namespace SocialNetworkClient.Controllers
             if (IsTokenValid())
             {
                 User user = GetMyUser();
-                List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts, user.Username);
+           //     GetPostMoel getPostMoel = new GetPostMoel { SkipNumber = numberToSkip.ToString(), UserName = user.Username}
+                List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts, user.Username, mainModel.PostCounter);
+               // mainModel.PostCounter += 10;
                 mainModel.PostList = pl;
-
 
                 return View("index", mainModel);
             }
@@ -386,8 +390,8 @@ namespace SocialNetworkClient.Controllers
                         bool FollowingThisUser = GetUsersImFollowing().Exists(ur => ur.Id == toView.Username);
                         UserViewModel userToView = new UserViewModel(toView.Username, $"{toView.FirstName} {toView.LastName}", FollowingThisUser);
                         mainModel.UserToView = userToView;
-
-                        mainModel.PostList = GetPosts(ApiConfigs.GetUsersPosts, mainModel.UserToView.Username);
+                      //  GetPostMoel getPostMoel = new GetPostMoel { SkipNumber = numberToSkip.ToString(),}
+                        mainModel.PostList = GetPosts(ApiConfigs.GetUsersPosts, mainModel.UserToView.Username, mainModel.PostCounter);
 
                         return View("UserView", mainModel);
                     }
@@ -538,8 +542,10 @@ namespace SocialNetworkClient.Controllers
             if (IsTokenValid())
             {
                 mainModel.LoggedInUser = GetMyUser();
-                List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts, mainModel.LoggedInUser.Username);
+                List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts, mainModel.LoggedInUser.Username, mainModel.PostCounter);
                 mainModel.PostList = new List<Post>();
+                mainModel.PostCounter += 10;
+                
                 var userViewModel = new UserViewModel();
                 mainModel.PostList = pl;
                 mainModel.UserToView = userViewModel;
@@ -548,6 +554,19 @@ namespace SocialNetworkClient.Controllers
                 return View("UserProfile", mainModel);
             }
             else return UnvalidTokenRoute();
+        }
+
+        public PartialViewResult LoadMoreInrofile(MainModel mainModel)
+        {
+            mainModel.LoggedInUser = GetMyUser();
+            List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts, mainModel.LoggedInUser.Username, mainModel.PostCounter);
+            mainModel.PostList = new List<Post>();
+            mainModel.PostCounter += 10;
+
+            var userViewModel = new UserViewModel();
+            mainModel.UserToView = userViewModel;
+            mainModel.PostList = pl;
+            return PartialView("Posts",mainModel);
         }
 
         public ActionResult Logout()
@@ -621,9 +640,9 @@ namespace SocialNetworkClient.Controllers
             }
         }
 
-        private List<Post> GetPosts(string URL, string userName)
+        private List<Post> GetPosts(string URL, string userName,int skipCount)
         {
-            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(URL, userName);
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.GetRequest($"{URL}/{userName}/{skipCount}");
             if (returnTuple.Item2 == HttpStatusCode.OK)
             {
                 JArray jrr = new JArray();
@@ -683,7 +702,7 @@ namespace SocialNetworkClient.Controllers
         }
 
         public ActionResult SendComment(Post post)
-        {
+        {          
             if (IsTokenValid())
             {
                 post.NewComment.postId = post.PostId;
@@ -693,13 +712,17 @@ namespace SocialNetworkClient.Controllers
                 Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.CommentOnPost, post.NewComment);
                 if (returnTuple.Item2 == HttpStatusCode.OK)
                 {
+                    JObject jobj = new JObject();
+                    jobj = (JObject)returnTuple.Item1;
+                    var newPost = jobj.ToObject<Post>();
+
                     return View("Index", mainModel);
                 }
             }
             return UnvalidTokenRoute();
         }
 
-        public ActionResult LikeAPost(Post post)
+        public PartialViewResult LikeAPost(Post post)
         {
             post.Like = new Like();
             post.Like.postId = post.PostId;
@@ -708,13 +731,16 @@ namespace SocialNetworkClient.Controllers
             Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.Like, post.Like);
             if (returnTuple.Item2 == HttpStatusCode.OK)
             {
-                return View("Index", mainModel);
+                JObject jobj = new JObject();
+                jobj = (JObject)returnTuple.Item1;
+                var newPost = jobj.ToObject<Post>();
+                return PartialView("PostDetails", newPost);
             }
-            return UnvalidTokenRoute();
+         return PartialView();
 
         }
 
-        public ActionResult UnLikeAPost(Post post)
+        public PartialViewResult UnLikeAPost(Post post)
         {
             post.Like = new Like();
             post.Like.postId = post.PostId;
@@ -723,12 +749,15 @@ namespace SocialNetworkClient.Controllers
             Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.UnLike, post.Like);
             if (returnTuple.Item2 == HttpStatusCode.OK)
             {
-                return View("Index", mainModel);
+                JObject jobj = new JObject();
+                jobj = (JObject)returnTuple.Item1;
+                var newPost = jobj.ToObject<Post>();
+                return PartialView("PostDetails", newPost);
             }
-            return UnvalidTokenRoute();
+            return PartialView();
+
 
         }
-
     }
 
 }

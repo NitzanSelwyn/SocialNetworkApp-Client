@@ -5,27 +5,29 @@
 {
     foreach (var item in Model.CommentList)
     {
-        <br />
-        <div style="background-color:lightblue;">         
-            <p>@item.CommenterName -  @item.Text</p>
+        <div id=@Model.PostId>
+
+            <br />
+            <div style="background-color:lightblue;">
+                <p>@item.CommenterName -  @item.Text</p>
+            </div>
+            <br />
         </div>
-        <br />
     }
 }
-@if (Model.CommentList == null)
+@if (Model.CommentList.Count() <= 0)
 {
     <div>
         No Comments! Be The First One!
     </div>
 }
 
-
-@using (Html.BeginForm("SendComment", "Home", FormMethod.Post,Model))
+@using (Html.BeginForm("SendComment", "Home", FormMethod.Post, Model))
 {
     <div style="align-content: center;">
         @Html.EditorFor(m => m.NewComment.Text)
         @Html.HiddenFor(model => model.PostId)
-        
+
         <div class="error"> @Html.ValidationSummary()</div>
         <input type="submit" value="Comment" />
     </div>
