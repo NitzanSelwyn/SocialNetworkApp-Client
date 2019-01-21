@@ -238,7 +238,7 @@ namespace SocialNetworkClient.Controllers
             //views all the users that I blocked
             if (IsTokenValid())
             {
-                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetBlockedUsers, Session[MainConfigs.SessionUsernameToken]);
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetBlockedUsers, Session[MainConfigs.SessionUsernameKey]);
                 if (returnTuple.Item2 == HttpStatusCode.OK)
                 {
                     JArray jarr = new JArray();
@@ -271,7 +271,7 @@ namespace SocialNetworkClient.Controllers
             //Unfollows the selected user
             if (IsTokenValid())
             {
-                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), id, UserRequestEnum.UnFollow);
+                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameKey].ToString(), id, UserRequestEnum.UnFollow);
                 if (ManageRequest(request))
                 {
                     ViewBag.PageMessage = "User Unfollowed Successfully";
@@ -288,17 +288,17 @@ namespace SocialNetworkClient.Controllers
             }
         }
 
-        public ActionResult FollowUser(string username)
+        public ActionResult FollowUser(string id)
         {
             //Follows the selected user
             if (IsTokenValid())
             {
-                if (username == Session[MainConfigs.SessionUsernameToken].ToString())
+                if (id == Session[MainConfigs.SessionUsernameKey].ToString())
                 {
                     ViewBag.PageMessage = "Dont try to follow yourself";
-                    return ViewUser(username);
+                    return ViewUser(id);
                 }
-                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.Follow);
+                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameKey].ToString(), id, UserRequestEnum.Follow);
                 if (ManageRequest(request))
                 {
                     ViewBag.PageMessage = "User Followed Successfully";
@@ -307,7 +307,7 @@ namespace SocialNetworkClient.Controllers
                 {
                     ViewBag.PageMessage = "An Error has occurred";
                 }
-                return ViewUser(username);
+                return ViewUser(id);
             }
             else
             {
@@ -327,7 +327,7 @@ namespace SocialNetworkClient.Controllers
             //unblocks the selected user
             if (IsTokenValid())
             {
-                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), id, UserRequestEnum.UnBlock);
+                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameKey].ToString(), id, UserRequestEnum.UnBlock);
                 if (ManageRequest(request))
                 {
                     ViewBag.PageMessage = "User Unblocked Successfully";
@@ -344,17 +344,17 @@ namespace SocialNetworkClient.Controllers
             }
         }
 
-        public ActionResult BlockUser(string username)
+        public ActionResult BlockUser(string id)
         {
             //Blocks the selected user
             if (IsTokenValid())
             {
-                if (username == Session[MainConfigs.SessionUsernameToken].ToString())
+                if (id == Session[MainConfigs.SessionUsernameKey].ToString())
                 {
                     ViewBag.PageMessage = "Dont try to block yourself";
-                    return ViewUser(username);
+                    return ViewUser(id);
                 }
-                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), username, UserRequestEnum.Block);
+                UserRequestModel request = new UserRequestModel(Session[MainConfigs.SessionUsernameKey].ToString(), id, UserRequestEnum.Block);
                 if (ManageRequest(request))
                 {
                     ViewBag.PageMessage = "User blocked Successfully";
@@ -377,7 +377,7 @@ namespace SocialNetworkClient.Controllers
             if (IsTokenValid())
             {
                 User toView = GetUserByUsername(username);
-                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.BlockedByUsersRoute, new UserRequestModel(Session[MainConfigs.SessionUsernameToken].ToString(), toView.Username));
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.BlockedByUsersRoute, new UserRequestModel(Session[MainConfigs.SessionUsernameKey].ToString(), toView.Username));
                 if (returnTuple.Item2 == HttpStatusCode.OK)
                 {
                     bool blockedMe = Convert.ToBoolean(returnTuple.Item1);
@@ -412,7 +412,7 @@ namespace SocialNetworkClient.Controllers
         private List<UserRepresentation> GetUsersImFollowing()
         {
             //returns the users that im following
-            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetFollowingUsers, Session[MainConfigs.SessionUsernameToken]);
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetFollowingUsers, Session[MainConfigs.SessionUsernameKey]);
             if (returnTuple.Item2 == HttpStatusCode.OK)
             {
                 JArray jarr = new JArray();
@@ -427,7 +427,7 @@ namespace SocialNetworkClient.Controllers
         private List<UserRepresentation> GetUsersThatFollowsMe()
         {
             //gets the users that follows me
-            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetUsersThatFollowsMe, Session[MainConfigs.SessionUsernameToken]);
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetUsersThatFollowsMe, Session[MainConfigs.SessionUsernameKey]);
             if (returnTuple.Item2 == HttpStatusCode.OK)
             {
                 JArray jarr = new JArray();
@@ -497,9 +497,10 @@ namespace SocialNetworkClient.Controllers
         private void SaveDetailsToSession(User user)
         {
             //saves the user's first and last name to the session for visualisation
-            Session[MainConfigs.SessionFirstnameToken] = user.FirstName;
-            Session[MainConfigs.SessionLastnameToken] = user.LastName;
-            Session[MainConfigs.SessionUsernameToken] = user.Username;
+            Session[MainConfigs.SessionConnectedKey] = true;
+            Session[MainConfigs.SessionFirstnameKey] = user.FirstName;
+            Session[MainConfigs.SessionLastnameKey] = user.LastName;
+            Session[MainConfigs.SessionUsernameKey] = user.Username;
         }
 
         public ActionResult SendPost(MainModel model)
@@ -548,8 +549,7 @@ namespace SocialNetworkClient.Controllers
                 var userViewModel = new UserViewModel();
                 mainModel.PostList = pl;
                 mainModel.UserToView = userViewModel;
-
-
+                
 
                 return View("UserProfile", mainModel);
             }
@@ -572,18 +572,21 @@ namespace SocialNetworkClient.Controllers
         public ActionResult Logout()
         {
             //logs out of the system and clears the data
-            Session[MainConfigs.SessionFirstnameToken] = null;
-            Session[MainConfigs.SessionLastnameToken] = null;
+            string firstName = Session[MainConfigs.SessionFirstnameKey].ToString();
+            Session[MainConfigs.SessionUsernameKey] = null;
+            Session[MainConfigs.SessionFirstnameKey] = null;
+            Session[MainConfigs.SessionLastnameKey] = null;
             Session[MainConfigs.SessionToken] = null;
-            ViewBag.ErrorMessag = "Bye bye!";
+            Session[MainConfigs.SessionConnectedKey] = null;
+            ViewBag.ErrorMessage = $"Bye {firstName}!";
             return View("Index", mainModel);
         }
 
         private ActionResult UnvalidTokenRoute()
         {
             //returns the user to the main window, with a pop message of logged out and clear the session data
-            Session[MainConfigs.SessionFirstnameToken] = null;
-            Session[MainConfigs.SessionLastnameToken] = null;
+            Session[MainConfigs.SessionFirstnameKey] = null;
+            Session[MainConfigs.SessionLastnameKey] = null;
             Session[MainConfigs.SessionToken] = null;
             ViewBag.ErrorMessage = "Session Timeout, Logged out of the system";
             return View("Index");
@@ -703,7 +706,7 @@ namespace SocialNetworkClient.Controllers
             if (IsTokenValid())
             {
                 post.NewComment.postId = post.PostId;
-                post.NewComment.CommenterName = Session[MainConfigs.SessionUsernameToken].ToString();
+                post.NewComment.CommenterName = Session[MainConfigs.SessionUsernameKey].ToString();
                 post.NewComment.CommentedDate = DateTime.Now;
 
                 Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.CommentOnPost, post.NewComment);
@@ -723,7 +726,7 @@ namespace SocialNetworkClient.Controllers
         {
             post.Like = new Like();
             post.Like.postId = post.PostId;
-            post.Like.UserName = Session[MainConfigs.SessionUsernameToken].ToString();
+            post.Like.UserName = Session[MainConfigs.SessionUsernameKey].ToString();
 
             Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.Like, post.Like);
             if (returnTuple.Item2 == HttpStatusCode.OK)
@@ -741,8 +744,8 @@ namespace SocialNetworkClient.Controllers
         {
             post.Like = new Like();
             post.Like.postId = post.PostId;
-            post.Like.UserName = Session[MainConfigs.SessionUsernameToken].ToString();
-            
+            post.Like.UserName = Session[MainConfigs.SessionUsernameKey].ToString();
+
             Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.UnLike, post.Like);
             if (returnTuple.Item2 == HttpStatusCode.OK)
             {

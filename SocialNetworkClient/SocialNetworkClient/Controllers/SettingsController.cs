@@ -188,8 +188,8 @@ namespace SocialNetworkClient.Controllers
         private ActionResult Logout()
         {
             //returns the user to the main window, with a pop message of logged out and clear the session data
-            Session[MainConfigs.SessionFirstnameToken] = null;
-            Session[MainConfigs.SessionLastnameToken] = null;
+            Session[MainConfigs.SessionFirstnameKey] = null;
+            Session[MainConfigs.SessionLastnameKey] = null;
             Session[MainConfigs.SessionToken] = null;
             ViewBag.ErrorMessag = "Session Timeout, Logged out of the system";
             return View("~/Views/Home/Index.cshtml");
@@ -226,14 +226,14 @@ namespace SocialNetworkClient.Controllers
         private void SaveDetailsToSession(User user)
         {
             //saves the user's first and last name to the session for visualisation
-            Session[MainConfigs.SessionFirstnameToken] = user.FirstName;
-            Session[MainConfigs.SessionLastnameToken] = user.LastName;
+            Session[MainConfigs.SessionFirstnameKey] = user.FirstName;
+            Session[MainConfigs.SessionLastnameKey] = user.LastName;
         }
         private ActionResult UnvalidTokenRoute()
         {
             //returns the user to the main window, with a pop message of logged out and clear the session data
-            Session[MainConfigs.SessionFirstnameToken] = null;
-            Session[MainConfigs.SessionLastnameToken] = null;
+            Session[MainConfigs.SessionFirstnameKey] = null;
+            Session[MainConfigs.SessionLastnameKey] = null;
             Session[MainConfigs.SessionToken] = null;
             ViewBag.ErrorMessag = "Session Timeout, Logged out of the system";
             return View("~/Views/Home/Index.cshtml");

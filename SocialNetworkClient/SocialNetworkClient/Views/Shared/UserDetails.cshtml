@@ -1,5 +1,5 @@
 ﻿@model SocialNetworkClient.Models.MainModel
-@if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken] == null)
+@if (Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey] == null)
 {
     using (Html.BeginForm("ClientLogin", "Home", FormMethod.Post))
     {

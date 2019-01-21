@@ -36,7 +36,7 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home", Model)</li>
                     <li>@Html.Partial("UserDetails")</li>
-                    @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken] == null)
+                    @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameKey] == null)
                     {
 
                         <input type="button" style="font-size:18px;height:50px" id="register" class="btn btn-warning btn-sm active" value="Register" onclick="location.href='@Url.Action("OpenRegister", "Home")'" />
@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameToken] != null)
+    @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameKey] != null)
     {
         <div style="position:fixed;background-image:url(https://image.freepik.com/free-vector/abstract-design-background_1048-6726.jpg) ;width:200px;height:1000px">
             @Html.Partial("DetailsSideBar")
@@ -67,3 +67,12 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+@{ 
+    if(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey]!=null&& Session[SocialNetworkClient.Configs.MainConfigs.SessionConnectedKey] != null)
+    {
+        var signalrClient = new SocialNetworkClient.Services.SignalrClient(Model);
+        signalrClient.Login(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey].ToString());
+        Session[SocialNetworkClient.Configs.MainConfigs.SessionConnectedKey] = true;
+    }
+
+}
