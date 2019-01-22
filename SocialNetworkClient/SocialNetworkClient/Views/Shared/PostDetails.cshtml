@@ -16,7 +16,7 @@
             <div id=@Model.PostId>
             </div>
             <div>
-                @if (Model.Like.UsersWhoLiked.Contains(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameToken]))
+                @if (Model.Like.UsersWhoLiked.Contains(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey]))
                 {
                     <button class="btn btn-danger" style="color:white;">
                         @Ajax.ActionLink(linkText: "UnLike", actionName: "UnLikeAPost", routeValues: Model, ajaxOptions: new AjaxOptions
@@ -41,20 +41,20 @@
 
             </div>
         </div>
-        @Ajax.ActionLink(linkText: "Show Comments", actionName: "GetPostComments",routeValues: Model, ajaxOptions: new AjaxOptions
-   {
-       HttpMethod = "Post",
-       UpdateTargetId = Model.PostId,
-       InsertionMode = InsertionMode.Replace
-   })
+        <br/>
+        <button class="btn btn-info">
 
-      
-
-
+            @Ajax.ActionLink(linkText: "Show Comments", actionName: "GetPostComments",routeValues: Model, ajaxOptions: new AjaxOptions
+       {
+           HttpMethod = "Post",
+           UpdateTargetId = Model.PostId,
+           InsertionMode = InsertionMode.Replace
+       })
+        </button>
     </div>
 </div>
 
 <br />
 
 @*<script src="~/Scripts/jquery-1.10.2.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@

@@ -9,13 +9,20 @@
 {
     foreach (var item in Model.UsersRep)
     {
-        @Html.ActionLink(linkText: $"{item.FullName}", actionName: "ViewUser", routeValues: new { username= item.Id })
+        <br />
+        <button class="btn btn-info">
+            @Html.ActionLink(linkText: $"{item.FullName}", actionName: "ViewUser", routeValues: new { username = item.Id })
+        </button>
+        <br />
     }
 }
 else
 {
     <h3>You are not followed by any users at the moment</h3>
 }
+<br />
+<br />
+
 
 @if (ViewBag.PageMessage != null)
 {

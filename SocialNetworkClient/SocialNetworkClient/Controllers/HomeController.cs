@@ -266,6 +266,7 @@ namespace SocialNetworkClient.Controllers
             return View(mainModel);
 
         }
+
         public ActionResult UnfollowUser(string id)
         {
             //Unfollows the selected user
@@ -424,6 +425,7 @@ namespace SocialNetworkClient.Controllers
                 return null;
             }
         }
+
         private List<UserRepresentation> GetUsersThatFollowsMe()
         {
             //gets the users that follows me
@@ -439,6 +441,7 @@ namespace SocialNetworkClient.Controllers
                 return null;
             }
         }
+
         public ActionResult AnotherUserView(MainModel model)
         {
             //views a user after verification that he/she/it didnt block me
@@ -541,32 +544,43 @@ namespace SocialNetworkClient.Controllers
         {
             if (IsTokenValid())
             {
-                mainModel.LoggedInUser = GetMyUser();
-                List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts, mainModel.LoggedInUser.Username, mainModel.PostCounter);
-                mainModel.PostList = new List<Post>();
-                mainModel.PostCounter += 10;
+                mainModel.LoggedInUser = GetMyUser();              
+                mainModel.PostList = GetPosts(ApiConfigs.GetUsersPosts, mainModel.LoggedInUser.Username, mainModel.PostCounter);
                 
-                var userViewModel = new UserViewModel();
-                mainModel.PostList = pl;
+                
+                var userViewModel = new UserViewModel();          
                 mainModel.UserToView = userViewModel;
                 
-
                 return View("UserProfile", mainModel);
             }
             else return UnvalidTokenRoute();
         }
 
-        public PartialViewResult LoadMoreInrofile(MainModel mainModel)
+       
+        public PartialViewResult LoadMoreInrofile(string modelFromProfile)
         {
             mainModel.LoggedInUser = GetMyUser();
-            List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts, mainModel.LoggedInUser.Username, mainModel.PostCounter);
-            mainModel.PostList = new List<Post>();
             mainModel.PostCounter += 10;
+
+            List<Post> pl = GetPosts(ApiConfigs.GetUsersPosts, modelFromProfile, mainModel.PostCounter);
+            mainModel.PostList = new List<Post>();
 
             var userViewModel = new UserViewModel();
             mainModel.UserToView = userViewModel;
             mainModel.PostList = pl;
-            return PartialView("Posts",mainModel);
+            return PartialView("Posts", mainModel);
+        }
+
+        public PartialViewResult LoadMorePosts(string userName)
+        {
+            mainModel.PostCounter += 10;
+            mainModel.PostList = new List<Post>();
+            List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts, userName, mainModel.PostCounter);
+            mainModel.PostList = pl;
+
+            var userViewModel = new UserViewModel();
+            mainModel.UserToView = userViewModel;
+            return PartialView("Posts", mainModel);
         }
 
         public ActionResult Logout()

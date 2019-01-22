@@ -1,8 +1,10 @@
 ﻿@model SocialNetworkClient.Models.MainModel
 
 @{
-    ViewBag.Title = "FollowingUsers";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+                /**/
+
+                ViewBag.Title = "FollowingUsers";
+                Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Users I'm Following</h2>
@@ -10,12 +12,16 @@
 {
     foreach (var item in Model.UsersRep)
     {
-        @Html.ActionLink(linkText: $"{item.FullName}", actionName: "ViewUser", routeValues: new { username = item.Id })
+        <br/>
+        <button class="btn btn-info">
+            @Html.ActionLink(linkText: $"{item.FullName}", actionName: "ViewUser", routeValues: new { username = item.Id })
+        </button>
         @*@Html.ActionLink("UnFollow", "UnfollowUser", new { item.Id }) <br /><br />*@
 
         <button class="btn btn-danger">
             @Html.ActionLink("UnFollow", "UnfollowUser", new { item.Id })
         </button>
+        <br/>
     }
 }
 else
