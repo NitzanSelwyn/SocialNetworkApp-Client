@@ -20,35 +20,41 @@
 
 @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey] != null)
 {
-
-
     @Html.Partial("AddPost", Model)
-
     <br />
-
     if (Model.PostList != null)
     {
-        <div id="postList">
-
+        <div id="postlist">
             @Html.Partial("Posts", Model)
         </div>
-
-
-        @Ajax.ActionLink("load more", "LoadMorePosts", new {username = Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey].ToString()}, new AjaxOptions
-   {
-       HttpMethod = "post",
-       UpdateTargetId = "postlist",
-       InsertionMode = InsertionMode.InsertAfter
-   })
+        if (Model.PostList.Count > 9)
+        {
+            <button class="btn btn-default">
+                @Ajax.ActionLink("load more", "LoadMorePosts", new {username = Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey].ToString()}, new AjaxOptions
+                {
+                    HttpMethod = "post",
+                    UpdateTargetId = "postlist",
+                    InsertionMode = InsertionMode.InsertAfter
+                })
+            </button>
+        }
     }
-
     <br />
 }
 
 
-
-
-
+@if (ViewBag.ErrorMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.ErrorMessage");
+    </script>
+}
+@if (ViewBag.SuccessMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.SuccessMessage");
+    </script>
+}
 
 
 

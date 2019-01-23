@@ -10,8 +10,14 @@
 {
     foreach (var item in Model.UsersRep)
     {
-        @Html.ActionLink(linkText: $"{item.FullName}", actionName: "ViewUser", routeValues: new { username = item.Id })
-        @Html.ActionLink("UnBlock", "UnblockUser", new { item.Id }) <br /><br />
+        <br />
+        <button class="btn btn-info">
+            @Html.ActionLink(linkText: $"{item.FullName}", actionName: "ViewUser", routeValues: new { username = item.Id })
+        </button>
+        <button class="btn btn-danger">
+            @Html.ActionLink("UnBlock", "UnblockUser", new { item.Id })
+        </button>
+        <br />
     }
 }
 else
