@@ -27,10 +27,10 @@ namespace SocialNetworkClient.Controllers
         public HomeController()
         {
             mainModel = new MainModel();
-            
+
             httpClient = ClientContainer.container.GetInstance<IHttpClient>();
 
-           
+
         }
 
         private Uri RedirectUri
@@ -103,10 +103,9 @@ namespace SocialNetworkClient.Controllers
             if (IsTokenValid())
             {
                 User user = GetMyUser();
-           //     GetPostMoel getPostMoel = new GetPostMoel { SkipNumber = numberToSkip.ToString(), UserName = user.Username}
+                //     GetPostMoel getPostMoel = new GetPostMoel { SkipNumber = numberToSkip.ToString(), UserName = user.Username}
                 List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts, user.Username, mainModel.PostCounter);
-               // mainModel.PostCounter += 10;
-           
+                // mainModel.PostCounter += 10;
                 mainModel.PostList = pl;
 
                 return View("index", mainModel);
@@ -135,15 +134,15 @@ namespace SocialNetworkClient.Controllers
             Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.UserLoginRoute, model.UserLogin);
             if (returnTuple.Item2 == HttpStatusCode.OK)
             {
-               
-                    JObject jobj = new JObject();
-                    jobj = (JObject)returnTuple.Item1;
-                    LoginRegisterResponse obj = jobj.ToObject<LoginRegisterResponse>();
-                    model.LoggedInUser = obj.user;
-                    SaveDetailsToSession(obj.user);
-                    SaveTokenToSession(obj.token);
-                    return RedirectToAction("Index", mainModel);
-                
+
+                JObject jobj = new JObject();
+                jobj = (JObject)returnTuple.Item1;
+                LoginRegisterResponse obj = jobj.ToObject<LoginRegisterResponse>();
+                model.LoggedInUser = obj.user;
+                SaveDetailsToSession(obj.user);
+                SaveTokenToSession(obj.token);
+                return RedirectToAction("Index", mainModel);
+
             }
             else if (returnTuple.Item2 == HttpStatusCode.Conflict)
             {
@@ -392,7 +391,7 @@ namespace SocialNetworkClient.Controllers
                         bool FollowingThisUser = GetUsersImFollowing().Exists(ur => ur.Id == toView.Username);
                         UserViewModel userToView = new UserViewModel(toView.Username, $"{toView.FirstName} {toView.LastName}", FollowingThisUser);
                         mainModel.UserToView = userToView;
-                      //  GetPostMoel getPostMoel = new GetPostMoel { SkipNumber = numberToSkip.ToString(),}
+                        //  GetPostMoel getPostMoel = new GetPostMoel { SkipNumber = numberToSkip.ToString(),}
                         mainModel.PostList = GetPosts(ApiConfigs.GetUsersPosts, mainModel.UserToView.Username, mainModel.PostCounter);
 
                         return View("UserView", mainModel);
@@ -506,9 +505,56 @@ namespace SocialNetworkClient.Controllers
             Session[MainConfigs.SessionLastnameKey] = user.LastName;
             Session[MainConfigs.SessionUsernameKey] = user.Username;
         }
+        [HttpPost]
+        public PartialViewResult ShowNotifications()
+        {
+            //shows the notification's partial view
+            List<Notification> notifs = GetMyNotifications();
+           
+            return PartialView("Notifications", notifs);
+        }
+
+        private List<Notification> GetMyNotifications()
+        {
+            //returns my notifications
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetNotifications, Session[MainConfigs.SessionUsernameKey].ToString());
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                JArray jarr = new JArray();
+                jarr = (JArray)returnTuple.Item1;
+                return jarr.ToObject<List<Notification>>();
+            }
+            else
+            {
+               return new List<Notification>();
+            }
+        }
+
+        [HttpPost]
+        public int ShowNotificationsCount()
+        {
+            //shows the notification's partial view
+            int count = GetMyNotificationCount();
+            return count;
+        }
+
+        private int GetMyNotificationCount()
+        {
+            //gets the notification count from the server
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetNotificationCount, Session[MainConfigs.SessionUsernameKey].ToString());
+            if (returnTuple.Item2 == HttpStatusCode.OK)
+            {
+                return Convert.ToInt32(returnTuple.Item1);
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
         public ActionResult SendPost(MainModel model)
         {
+
             if (IsTokenValid())
             {
                 model.LoggedInUser = GetMyUser();
@@ -655,7 +701,7 @@ namespace SocialNetworkClient.Controllers
             }
         }
 
-        private List<Post> GetPosts(string URL, string userName,int skipCount)
+        private List<Post> GetPosts(string URL, string userName, int skipCount)
         {
             Tuple<object, HttpStatusCode> returnTuple = httpClient.GetRequest($"{URL}/{userName}/{skipCount}");
             if (returnTuple.Item2 == HttpStatusCode.OK)
@@ -717,7 +763,7 @@ namespace SocialNetworkClient.Controllers
         }
 
         public ActionResult SendComment(Post post)
-        {          
+        {
             if (IsTokenValid())
             {
                 post.NewComment.postId = post.PostId;
@@ -751,7 +797,7 @@ namespace SocialNetworkClient.Controllers
                 var newPost = jobj.ToObject<Post>();
                 return PartialView("PostDetails", newPost);
             }
-         return PartialView();
+            return PartialView();
 
         }
 
