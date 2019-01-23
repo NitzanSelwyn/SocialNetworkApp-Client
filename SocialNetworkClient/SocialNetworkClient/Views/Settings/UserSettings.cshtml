@@ -8,11 +8,26 @@
 <h2>My Settings</h2>
 <br />
 
-@Html.ActionLink("Edit Profile Details", "ShowEditDetails") <br /><br />
-@Html.ActionLink("Change Password", "ShowChangePassword") <br /><br />
-@Html.ActionLink("Blocked Users", "BlockedUsers", "Home") <br /><br />
-@Html.ActionLink(linkText: "Users I'm Following", actionName: "UsersImFollowing", controllerName: "Home") <br /><br />
-@Html.ActionLink(linkText: "Users That Are Following Me", actionName: "UsersThatFollowMe", controllerName: "Home") <br /><br />
+<button class="btn btn-info">
+    @Html.ActionLink("Edit Profile Details", "ShowEditDetails")
+</button>
+<br /><br />
+<button class="btn btn-info">
+    @Html.ActionLink("Change Password", "ShowChangePassword")
+</button>
+<br /><br />
+<button class="btn btn-info">
+    @Html.ActionLink("Blocked Users", "BlockedUsers", "Home")
+</button>
+<br /><br />
+<button class="btn btn-info">
+    @Html.ActionLink(linkText: "Users I'm Following", actionName: "UsersImFollowing", controllerName: "Home")
+</button>
+<br /><br />
+<button class="btn btn-info">
+    @Html.ActionLink(linkText: "Users That Are Following Me", actionName: "UsersThatFollowMe", controllerName: "Home")
+</button>
+<br /><br />
 
 @if (ViewBag.ErrorMessage != null)
 {

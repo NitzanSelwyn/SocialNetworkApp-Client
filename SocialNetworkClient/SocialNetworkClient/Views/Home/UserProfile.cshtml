@@ -4,90 +4,116 @@
     ViewBag.Title = "UserProfile";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h2>My Profile</h2>
+<div class="container">
+    <div class="jumbotron">
+        <div>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    <span class="badge badge-primary">
+                        @Html.DisplayNameFor(model => model.LoggedInUser.Username)
+                    </span>
+                </dt>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.LoggedInUser.Username)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.LoggedInUser.Username)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.LoggedInUser.Username)
-        </dd>
+                <dt>
+                    <span class="badge badge-primary">
+                        @Html.DisplayNameFor(model => model.LoggedInUser.FirstName)
+                    </span>
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LoggedInUser.FirstName)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.LoggedInUser.FirstName)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.LoggedInUser.FirstName)
-        </dd>
+                <dt>
+                    <span class="badge badge-primary">
+                        @Html.DisplayNameFor(model => model.LoggedInUser.LastName)
+                    </span>
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LoggedInUser.LastName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.LoggedInUser.LastName)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.LoggedInUser.LastName)
+                </dd>
 
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LoggedInUser.Email)
-        </dt>
+                <dt>
+                    <span class="badge badge-primary">
+                        @Html.DisplayNameFor(model => model.LoggedInUser.Email)
+                    </span>
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.LoggedInUser.Email)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.LoggedInUser.Email)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LoggedInUser.BirthDate)
-        </dt>
+                <dt>
+                    <span class="badge badge-primary">
+                        @Html.DisplayNameFor(model => model.LoggedInUser.BirthDate)
+                    </span>
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.LoggedInUser.BirthDate)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.LoggedInUser.BirthDate)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LoggedInUser.Address)
-        </dt>
+                <dt>
+                    <span class="badge badge-primary">
+                        @Html.DisplayNameFor(model => model.LoggedInUser.Address)
+                    </span>
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.LoggedInUser.Address)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.LoggedInUser.Address)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LoggedInUser.WorkLocation)
-        </dt>
+                <dt>
+                    <span class="badge badge-primary">
+                        @Html.DisplayNameFor(model => model.LoggedInUser.WorkLocation)
+                    </span>
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.LoggedInUser.WorkLocation)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.LoggedInUser.WorkLocation)
+                </dd>
 
-        <dt>
-            <br />
-            @Html.ActionLink(linkText: "Edit Settings", actionName: "EditSettings", controllerName: "Settings")
-        </dt>
-    </dl>
+
+                <dt>
+                    <br />
+                    <button class="btn btn-default">
+                        @Html.ActionLink(linkText: "Edit Settings", actionName: "EditSettings", controllerName: "Settings")
+                    </button>
+                </dt>
+            </dl>
+        </div>
+    </div>
+
+
+    <br />
 
     <div id="postList">
         @Html.Partial("Posts", Model)
     </div>
 
-
-    @Ajax.ActionLink(linkText: "Load More", actionName: "LoadMoreInrofile", routeValues:Model, ajaxOptions: new AjaxOptions
+    <button class="btn btn-default">
+        @Ajax.ActionLink(linkText: "Load More", actionName: "LoadMoreInrofile", routeValues:new { modelFromProfile = Model.LoggedInUser.Username } , ajaxOptions: new AjaxOptions
     {
-    HttpMethod = "Post",
-    UpdateTargetId = "postList",
-    InsertionMode = InsertionMode.InsertAfter
+        HttpMethod = "POST",
+        UpdateTargetId = "postList",
+        InsertionMode = InsertionMode.InsertAfter,
     })
+    </button>
 
 </div>
 
 <br />
+
+@*<script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
 
 
 

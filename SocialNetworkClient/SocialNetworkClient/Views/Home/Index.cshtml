@@ -22,13 +22,24 @@
 {
 
 
-    @Html.Partial("AddPost",Model)
+    @Html.Partial("AddPost", Model)
 
     <br />
 
     if (Model.PostList != null)
     {
-        @Html.Partial("Posts", Model)
+        <div id="postList">
+
+            @Html.Partial("Posts", Model)
+        </div>
+
+
+        @Ajax.ActionLink("load more", "LoadMorePosts", new {username = Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey].ToString()}, new AjaxOptions
+   {
+       HttpMethod = "post",
+       UpdateTargetId = "postlist",
+       InsertionMode = InsertionMode.InsertAfter
+   })
     }
 
     <br />
