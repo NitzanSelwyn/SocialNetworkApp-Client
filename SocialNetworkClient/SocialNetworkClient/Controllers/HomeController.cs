@@ -106,6 +106,7 @@ namespace SocialNetworkClient.Controllers
            //     GetPostMoel getPostMoel = new GetPostMoel { SkipNumber = numberToSkip.ToString(), UserName = user.Username}
                 List<Post> pl = GetPosts(ApiConfigs.GetFollowingPosts, user.Username, mainModel.PostCounter);
                // mainModel.PostCounter += 10;
+           
                 mainModel.PostList = pl;
 
                 return View("index", mainModel);

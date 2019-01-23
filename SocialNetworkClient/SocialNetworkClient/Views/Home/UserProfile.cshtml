@@ -92,21 +92,23 @@
         </div>
     </div>
 
-
-    <br />
-
     <div id="postList">
         @Html.Partial("Posts", Model)
     </div>
 
-    <button class="btn btn-default">
-        @Ajax.ActionLink(linkText: "Load More", actionName: "LoadMoreInrofile", routeValues:new { modelFromProfile = Model.LoggedInUser.Username } , ajaxOptions: new AjaxOptions
+    <br />
+    @if (Model.PostList.Count > 9)
     {
-        HttpMethod = "POST",
-        UpdateTargetId = "postList",
-        InsertionMode = InsertionMode.InsertAfter,
-    })
-    </button>
+        <button class="btn btn-default">
+            @Ajax.ActionLink(linkText: "Load More", actionName: "LoadMoreInrofile", routeValues:new { modelFromProfile = Model.LoggedInUser.Username } , ajaxOptions: new AjaxOptions
+        {
+            HttpMethod = "POST",
+            UpdateTargetId = "postList",
+            InsertionMode = InsertionMode.InsertAfter,
+        })
+        </button>
+    }
+
 
 </div>
 
