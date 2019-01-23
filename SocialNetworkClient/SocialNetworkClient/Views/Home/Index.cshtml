@@ -3,13 +3,13 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
+<div class="jumbotron" style="height:50px;background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYFWY0c-uS2zzTo8bQUAtZj-wSUWaYM_riJDKpys3UdvWdSs2zcw')">
     @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey] != null)
     {
         using (Html.BeginForm("SearchUsers", "Home", FormMethod.Post))
         {
             @Html.EditorFor(m => m.SearchInput)
-            <input type="submit" value="Search For Users" />
+            <input style="background-color:cornsilk" type="submit" value="Search For Users" />
         }
     }
 

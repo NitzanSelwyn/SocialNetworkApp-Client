@@ -9,7 +9,7 @@ namespace SocialNetworkClient.Enums
     {
         Liked_Post,
         Followed,
-        CommentedOnPost,
-        TaggedInPost
+        Commented_On_Post,
+        Tagged_In_Post
     }
 }
