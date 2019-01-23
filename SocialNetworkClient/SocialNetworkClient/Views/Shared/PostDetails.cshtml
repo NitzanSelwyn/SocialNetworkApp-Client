@@ -16,7 +16,7 @@
             <div id=@Model.PostId>
             </div>
             <div>
-                @if (Model.Like.UsersWhoLiked.Contains(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameToken]))
+                @if (Model.Like.UsersWhoLiked.Contains(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey]))
                 {
                     <button class="btn btn-danger" style="color:white;">
                         @Ajax.ActionLink(linkText: "UnLike", actionName: "UnLikeAPost", routeValues: Model, ajaxOptions: new AjaxOptions

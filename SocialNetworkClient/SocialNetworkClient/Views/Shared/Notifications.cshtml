@@ -1,0 +1,8 @@
+﻿@model IEnumerable<SocialNetworkClient.Models.Notification>
+    <div style="width:100px">
+        @foreach (var item in Model)
+        {
+            <div> @item.FromFullName @item.NotifyType.ToString()</div>
+        }
+
+    </div>
