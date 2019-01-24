@@ -34,8 +34,10 @@ namespace SocialNetworkClient.Configs
         public const string BlockedByUsersRoute = "Api/Users/BlockedByUser";
         public const string GetUserByUsername = "Api/Users/GetUserByUsername";
         public const string FacebookLoginRoute = "Api/Users/FacebookLogin";
+
         public const string GetNotificationCount = "Api/Users/GetNotificationCount";
         public const string GetNotifications = "Api/Users/GetNotifications";
+        public const string ClearNotificationsRoute = "Api/User/ClearNotifications";
 
         //AUTH AND TOKENS
         public const string GetTokenRoute = "Api/Users/GetToken";
@@ -48,5 +50,7 @@ namespace SocialNetworkClient.Configs
         public const string EditUserPasswordRoute = "Api/Settings/ChangePassword";
         public const string GetFollowingUsers = "Api/Settings/GetFollowingUsers";
         public const string GetUsersThatFollowsMe = "Api/Settings/GetUsersThatFollowsMe";
+
+       
     }
 }

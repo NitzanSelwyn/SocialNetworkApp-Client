@@ -1,5 +1,4 @@
 ﻿@model SocialNetworkClient.Models.MainModel
-@using Microsoft.AspNet.SignalR.Client;
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +15,7 @@
     <script src="https://getbootstrap.com/assets/js/vendor/popper.min.js"></script>
     <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
     <script src="https://getbootstrap.com/assets/js/vendor/holder.min.js"></script>
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -42,15 +41,16 @@
                     }
 
                 </ul>
-                @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionFirstnameKey] != null)
+                @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey] != null)
                 {
                     <div style="position:fixed; right:140px">
-                        <img onclick="OpenNotification()" height="50" src="https://lh3.googleusercontent.com/0LP-UDeeGnffpWQheJdus_2hqJtf0AN5-8aWupnLHrkbp0XT_2Azcul9MWLvh7c8r-8" />
+                        <img onclick="OpenNotifications()" height="50" src="https://lh3.googleusercontent.com/0LP-UDeeGnffpWQheJdus_2hqJtf0AN5-8aWupnLHrkbp0XT_2Azcul9MWLvh7c8r-8" />
                         <div style=" top:-15px;left:10px">
-                            <div id="notificDiv">0</div>
+                            <div style="font-size:18px;color:red;font-weight:bold" id="notificDiv">0</div>
                         </div>
                         <div id="notifications"></div>
                     </div>
+
                 }
             </div>
         </div>
@@ -87,6 +87,34 @@
 </body>
 </html>
 
+<script type="text/javascript">
+    UpdateNotificationsCount();
+    function UpdateNotificationsCount() {
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://localhost:44371/Home/ShowNotificationsCount";
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("notificDiv").innerText = this.responseText;
+               
+            }
+        };
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+
+    }
+    function OpenNotifications() {
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://localhost:44371/Home/ShowNotifications";
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("notifications").innerHTML =this.responseText;
+            }
+        };
+        xmlhttp.open("POST", url, true);
+        xmlhttp.send();
+    
+    }
+</script>
 
 
 

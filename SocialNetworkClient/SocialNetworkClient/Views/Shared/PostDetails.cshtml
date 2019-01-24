@@ -2,12 +2,12 @@
 
 <br />
 <div class="container" id="postDetils">
-    <div class="card" style="width:200px;align-content:center; background-color:gray;">
+    <div class="card" style="width:250px;align-content:center;background-image:url('https://wallpapertag.com/wallpaper/full/e/b/8/406322-background-picture-2560x1600-for-android-50.jpg');font-weight:bold; box-shadow: 1px 1px 2px black, 0 0 25px gray, 0 0 10px black;">
         @if (Model.ImageLink != string.Empty)
         {
             <img style="width:100%" class="card-img-top" src="@Model.ImageLink" alt="Card image">
         }
-        <div class="card-body">
+        <div style="margin-left:12px" class="card-body" >
             <h4 class="card-title">@Html.ActionLink(linkText: Model.FullName, actionName: "ViewUser", routeValues: new { username = Model.Author })</h4>
             <h4> @Model.Like.UsersWhoLiked.Count Likes</h4>
             <p class="card-text">@Model.Content</p> <br />
@@ -46,8 +46,8 @@
 
             </div>
         </div>
-        <br />
-        <button class="btn btn-info">
+        <br/>
+        <button style="margin-left:12px;" class="btn btn-info">
 
             @Ajax.ActionLink(linkText: "Show Comments", actionName: "GetPostComments",routeValues: Model, ajaxOptions: new AjaxOptions
        {

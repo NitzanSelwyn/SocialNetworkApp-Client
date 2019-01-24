@@ -1,8 +1,49 @@
 ﻿@model IEnumerable<SocialNetworkClient.Models.Notification>
-    <div style="width:100px">
+<body>
+    <div style="width:150px">
         @foreach (var item in Model)
         {
-            <div> @item.FromFullName @item.NotifyType.ToString()</div>
-        }
+            <div style="background-color:aquamarine" class="info">
+                @{
+                    string date = $"{item.DateOfNotify.DayOfWeek.ToString()}, {item.DateOfNotify.Day}/{item.DateOfNotify.Month}";
+                    switch (item.NotifyType)
+                    {
+                        case SocialNetworkClient.Enums.NotificationEnum.Liked_Post:
+                <div>
+                    @Html.ActionLink(linkText: $"{item.FromFullName}", actionName: "ViewUser", routeValues: new {username= item.FromId })
+                    Liked your post, PostId: @item.PostId <br />
+                    on @date
+                </div>
+                            break;
+                        case SocialNetworkClient.Enums.NotificationEnum.Followed:
+                            <div>
+                                @item.FromFullName <br />
+                                Started following you <br />
+                                on @date
+                            </div>
+                            break;
+                        case SocialNetworkClient.Enums.NotificationEnum.Commented_On_Post:
+                            <div>
+                                @item.FromFullName <br />
+                                Commented on your post,PostId: @item.PostId <br />
+                                on @date
+                            </div>
+                            break;
+                        case SocialNetworkClient.Enums.NotificationEnum.Tagged_In_Post:
+                            <div>
+                                @item.FromFullName <br />
+                                Tagged you in a post,PostId: @item.PostId <br />
+                                on @date
+                            </div>
+                            break;
+                        default:
+                            break;
+                    }
+                }
 
+            </div>
+            <br />
+        }
+        @Html.Action("ClearNotifications")
     </div>
+</body>

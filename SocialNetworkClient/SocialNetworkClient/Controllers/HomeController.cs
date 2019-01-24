@@ -391,29 +391,37 @@ namespace SocialNetworkClient.Controllers
             if (IsTokenValid())
             {
                 User toView = GetUserByUsername(username);
-                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.BlockedByUsersRoute, new UserRequestModel(Session[MainConfigs.SessionUsernameKey].ToString(), toView.Username));
-                if (returnTuple.Item2 == HttpStatusCode.OK)
+                if (toView != null)
                 {
-                    bool blockedMe = Convert.ToBoolean(returnTuple.Item1);
-                    if (blockedMe)
+                    Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.BlockedByUsersRoute, new UserRequestModel(Session[MainConfigs.SessionUsernameKey].ToString(), toView.Username));
+                    if (returnTuple.Item2 == HttpStatusCode.OK)
                     {
-                        return View("BlockedView");
+                        bool blockedMe = Convert.ToBoolean(returnTuple.Item1);
+                        if (blockedMe)
+                        {
+                            return View("BlockedView");
+                        }
+                        else
+                        {
+                            bool FollowingThisUser = GetUsersImFollowing().Exists(ur => ur.Id == toView.Username);
+                            UserViewModel userToView = new UserViewModel(toView.Username, $"{toView.FirstName} {toView.LastName}", FollowingThisUser);
+                            mainModel.UserToView = userToView;
+                            //  GetPostMoel getPostMoel = new GetPostMoel { SkipNumber = numberToSkip.ToString(),}
+                            mainModel.PostList = GetPosts(ApiConfigs.GetUsersPosts, mainModel.UserToView.Username, mainModel.PostCounter);
+
+                            return View("UserView", mainModel);
+                        }
                     }
                     else
                     {
-                        bool FollowingThisUser = GetUsersImFollowing().Exists(ur => ur.Id == toView.Username);
-                        UserViewModel userToView = new UserViewModel(toView.Username, $"{toView.FirstName} {toView.LastName}", FollowingThisUser);
-                        mainModel.UserToView = userToView;
-                        //  GetPostMoel getPostMoel = new GetPostMoel { SkipNumber = numberToSkip.ToString(),}
-                        mainModel.PostList = GetPosts(ApiConfigs.GetUsersPosts, mainModel.UserToView.Username, mainModel.PostCounter);
-
-                        return View("UserView", mainModel);
+                        ViewBag.ErrorMessage = "An Error has acquired";
+                        return View("Index",mainModel);
                     }
                 }
                 else
                 {
-                    ViewBag.ErrorMessage = "An Error has acquired";
-                    return View("Index");
+                    ViewBag.ErrorMessage = " This User Doesnt Exists";
+                    return View("Index",mainModel);
                 }
             }
             else
@@ -523,27 +531,34 @@ namespace SocialNetworkClient.Controllers
         {
             //shows the notification's partial view
             List<Notification> notifs = GetMyNotifications();
-           
+
             return PartialView("Notifications", notifs);
         }
 
         private List<Notification> GetMyNotifications()
         {
             //returns my notifications
-            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetNotifications, Session[MainConfigs.SessionUsernameKey].ToString());
-            if (returnTuple.Item2 == HttpStatusCode.OK)
+            List<Notification> notifications = new List<Notification>();
+            if (Session[MainConfigs.SessionUsernameKey] != null)
             {
-                JArray jarr = new JArray();
-                jarr = (JArray)returnTuple.Item1;
-                return jarr.ToObject<List<Notification>>();
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetNotifications, Session[MainConfigs.SessionUsernameKey].ToString());
+                if (returnTuple.Item2 == HttpStatusCode.OK)
+                {
+                    JArray jarr = new JArray();
+                    jarr = (JArray)returnTuple.Item1;
+                    notifications = jarr.ToObject<List<Notification>>();
+                }
             }
-            else
-            {
-               return new List<Notification>();
-            }
-        }
+            return notifications;
 
+        }
         [HttpPost]
+        public void ClearNotifications()
+        {
+            //after opening the notifications partial view, send the server a command to clear the notifactions for this user
+            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.ClearNotificationsRoute, Session[MainConfigs.SessionUsernameKey]);
+        }
+        [HttpGet]
         public int ShowNotificationsCount()
         {
             //shows the notification's partial view
@@ -554,15 +569,16 @@ namespace SocialNetworkClient.Controllers
         private int GetMyNotificationCount()
         {
             //gets the notification count from the server
-            Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetNotificationCount, Session[MainConfigs.SessionUsernameKey].ToString());
-            if (returnTuple.Item2 == HttpStatusCode.OK)
+            int notifCount = 0;
+            if (Session[MainConfigs.SessionUsernameKey] != null)
             {
-                return Convert.ToInt32(returnTuple.Item1);
+                Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.GetNotificationCount, Session[MainConfigs.SessionUsernameKey].ToString());
+                if (returnTuple.Item2 == HttpStatusCode.OK)
+                {
+                    notifCount = Convert.ToInt32(returnTuple.Item1);
+                }
             }
-            else
-            {
-                return 0;
-            }
+            return notifCount;
         }
 
         public ActionResult SendPost(MainModel model)
@@ -622,19 +638,19 @@ namespace SocialNetworkClient.Controllers
         {
             if (IsTokenValid())
             {
-                mainModel.LoggedInUser = GetMyUser();              
+                mainModel.LoggedInUser = GetMyUser();
                 mainModel.PostList = GetPosts(ApiConfigs.GetUsersPosts, mainModel.LoggedInUser.Username, mainModel.PostCounter);
-                
-                
-                var userViewModel = new UserViewModel();          
+
+
+                var userViewModel = new UserViewModel();
                 mainModel.UserToView = userViewModel;
-                
+
                 return View("UserProfile", mainModel);
             }
             else return UnvalidTokenRoute();
         }
 
-       
+
         public PartialViewResult LoadMoreInrofile(string modelFromProfile)
         {
             mainModel.LoggedInUser = GetMyUser();
