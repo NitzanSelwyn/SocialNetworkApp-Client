@@ -20,5 +20,7 @@ namespace SocialNetworkClient.Models.Posts
         [DisplayName("Optional Image")]
         [ImageValidator]
         public HttpPostedFileBase Image { get; set; }
+
+        public string Mantioned { get; set; }
     }
 }

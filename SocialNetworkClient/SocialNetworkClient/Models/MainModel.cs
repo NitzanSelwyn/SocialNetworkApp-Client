@@ -1,11 +1,14 @@
-﻿using SocialNetworkClient.Contracts;
+﻿using Newtonsoft.Json.Linq;
+using SocialNetworkClient.Contracts;
 using SocialNetworkClient.Models.Posts;
 using SocialNetworkClient.Models.RequestsAndResponses;
 using SocialNetworkClient.Models.Users;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace SocialNetworkClient.Models
 {
@@ -29,5 +32,10 @@ namespace SocialNetworkClient.Models
         public List<UserRepresentation> UsersRep { get; set; }
         public List<Notification> Notifications { get; set; }
         public int PostCounter { get; set; }
+
+        public IEnumerable<SelectListItem> FollowingList { get; set; }
+
+        [Display(Name = "Mantion a User")]
+        public string UserMantioned { get; set; }
     }
 }

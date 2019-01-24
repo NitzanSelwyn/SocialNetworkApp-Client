@@ -13,6 +13,11 @@
             <p class="card-text">@Model.Content</p> <br />
             <p class="card-text">Posted at - @Model.DatePosted</p>
 
+            @if (Model.MantionedUser != null)
+            {
+                <p>User Mantioned @@ @Model.MantionedUser</p>
+            }
+
             <div id=@Model.PostId>
             </div>
             <div>
@@ -41,7 +46,7 @@
 
             </div>
         </div>
-        <br/>
+        <br />
         <button class="btn btn-info">
 
             @Ajax.ActionLink(linkText: "Show Comments", actionName: "GetPostComments",routeValues: Model, ajaxOptions: new AjaxOptions

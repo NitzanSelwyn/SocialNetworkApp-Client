@@ -33,6 +33,6 @@ namespace SocialNetworkClient.Models
 
         public Comment NewComment { get; set; }
 
-
+        public string MantionedUser { get; set; }
     }
 }

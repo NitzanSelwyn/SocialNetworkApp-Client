@@ -108,7 +108,20 @@ namespace SocialNetworkClient.Controllers
                 // mainModel.PostCounter += 10;
                 mainModel.PostList = pl;
 
+                var userList = GetUsersImFollowing();
+                var selectList = GetSelectListItems(userList);
+
+                mainModel.FollowingList = selectList;
+
                 return View("index", mainModel);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var userList = GetUsersImFollowing();
+                var selectList = GetSelectListItems(userList);
+
+                mainModel.FollowingList = selectList;
             }
             return View("index", mainModel);
         }
@@ -554,7 +567,7 @@ namespace SocialNetworkClient.Controllers
 
         public ActionResult SendPost(MainModel model)
         {
-
+            
             if (IsTokenValid())
             {
                 model.LoggedInUser = GetMyUser();
@@ -567,6 +580,7 @@ namespace SocialNetworkClient.Controllers
                     post.Image = CovertToByteArray(model.Post.Image);
                     post.FullName = $"{model.LoggedInUser.FirstName} {model.LoggedInUser.LastName}";
                     post.DatePosted = DateTime.Now;
+                    post.MantionedUser = model.UserMantioned;
 
                     //Post newPost = new Post(model.LoggedInUser.Username,
                     //    model.Post.Text, 0, model.Post.Image.FileName);
@@ -574,7 +588,7 @@ namespace SocialNetworkClient.Controllers
                     Tuple<object, HttpStatusCode> returnTuple = httpClient.PostRequest(ApiConfigs.PostNewMessage, post);
                     if (returnTuple.Item2 == HttpStatusCode.OK)
                     {
-                        return View("Index", model);
+                        return RedirectToAction("Index", model);
                     }
                     else
                     {
@@ -585,6 +599,23 @@ namespace SocialNetworkClient.Controllers
             }
             return View("Index", model);
 
+        }
+
+        private IEnumerable<SelectListItem> GetSelectListItems(IEnumerable<UserRepresentation> elements)
+        {
+            // Create an empty list to hold result of the operation
+            var selectList = new List<SelectListItem>();
+
+            foreach (var element in elements)
+            {
+                selectList.Add(new SelectListItem
+                {
+                    Value = element.Id,
+                    Text = element.FullName
+                });
+            }
+
+            return selectList;
         }
 
         public ActionResult UserProfile()
@@ -777,7 +808,7 @@ namespace SocialNetworkClient.Controllers
                     jobj = (JObject)returnTuple.Item1;
                     var newPost = jobj.ToObject<Post>();
 
-                    return View("Index", mainModel);
+                    return RedirectToAction("Index", mainModel);
                 }
             }
             return UnvalidTokenRoute();

@@ -181,10 +181,7 @@ namespace SocialNetworkClient.Controllers
                 return false;
             }
         }
-        
-        
-       
-
+      
         private ActionResult Logout()
         {
             //returns the user to the main window, with a pop message of logged out and clear the session data
