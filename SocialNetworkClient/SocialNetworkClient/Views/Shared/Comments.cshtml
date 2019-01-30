@@ -1,0 +1,37 @@
+﻿@model SocialNetworkClient.Models.Post
+
+
+@if (Model.CommentList != null)
+{
+    foreach (var item in Model.CommentList)
+    {
+        <div id=@Model.PostId>
+
+            <br />
+            <div style="background-color:lightblue;">
+                <p>@item.CommenterName -  @item.Text</p>
+            </div>
+            <br />
+        </div>
+    }
+}
+@if (Model.CommentList.Count() <= 0)
+{
+    <div>
+        No Comments! Be The First One!
+    </div>
+}
+
+@using (Html.BeginForm("SendComment", "Home", FormMethod.Post, Model))
+{
+    <div style="align-content: center;">
+        @Html.EditorFor(m => m.NewComment.Text)
+        @Html.HiddenFor(model => model.PostId)
+
+        <div class="error"> @Html.ValidationSummary()</div>
+        <input type="submit" value="Comment" />
+    </div>
+}
+
+@*<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@

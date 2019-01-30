@@ -10,12 +10,12 @@ using System.Web;
 
 namespace SocialNetworkClient.Services
 {
-    public class HttpClientSender:IHttpClient
+    public class HttpClientSender : IHttpClient
     {
         public HttpClientSender()
         {
-
         }
+
         public HttpClient client { get; set; }
 
         public Tuple<object, HttpStatusCode> GetRequest(string route)
@@ -29,12 +29,10 @@ namespace SocialNetworkClient.Services
                     object result = response.Content.ReadAsAsync(typeof(object)).Result;
                     return new Tuple<object, HttpStatusCode>(result, response.StatusCode);
                 }
-                catch (AggregateException e)
+                catch (AggregateException)
                 {
-
                     return new Tuple<object, HttpStatusCode>(null, HttpStatusCode.ExpectationFailed);
                 }
-
             }
         }
 
@@ -49,17 +47,26 @@ namespace SocialNetworkClient.Services
                     object result = response.Content.ReadAsAsync(typeof(object)).Result;
                     return new Tuple<object, HttpStatusCode>(result, response.StatusCode);
                 }
-                catch (AggregateException e)
+                catch (AggregateException)
                 {
                     return new Tuple<object, HttpStatusCode>(null, HttpStatusCode.ExpectationFailed);
                 }
             }
         }
+
         public void InitHttpClient()
         {
             client.BaseAddress = new Uri(MainConfigs.Url);
             client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            try
+            {
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            }
+            catch (Exception e)
+            {
+                //MediaTypeWithQualityHeaderValue already added (somehow...)
+            }
+
         }
     }
 }

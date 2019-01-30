@@ -1,0 +1,13 @@
+﻿@model SocialNetworkClient.Models.MainModel
+
+@{
+    ViewBag.Title = "SearchedUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Searched Users</h2>
+@foreach (var item in Model.SearchedUsers)
+{
+    @Html.ActionLink(linkText: $"{item.FirstName} {item.LastName}", actionName: "ViewUser", routeValues:new { item.Username })
+    <br /> <br />
+}

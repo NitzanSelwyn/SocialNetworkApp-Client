@@ -1,0 +1,44 @@
+﻿@model SocialNetworkClient.Models.MainModel
+
+@{
+    ViewBag.Title = "AnotherUserView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>@Model.UserToView.FullName's Profile</h2>
+<br />
+@if (Model.UserToView.FollowingThisUser)
+{
+    @Html.ActionLink(linkText: $"Unfollow {Model.UserToView.FullName}", actionName: "UnfollowUser", routeValues: new { id = Model.UserToView.Username }) <br />
+}
+else
+{
+    @Html.ActionLink(linkText: $"Follow {Model.UserToView.FullName}", actionName: "FollowUser", routeValues: new { id = Model.UserToView.Username }) <br />
+}
+@Html.ActionLink(linkText: $"Block {Model.UserToView.FullName}", actionName: "BlockUser", routeValues: new { id = Model.UserToView.Username }) <br />
+
+
+@if (Model.PostList != null)
+{
+    @Html.Partial("Posts", Model)
+
+    @*if (Model.PostList.Count > 9)
+    {
+        <button class="btn btn-default">
+            @Ajax.ActionLink(linkText: "Load More", actionName: "LoadMoreInrofile", routeValues:new { modelFromProfile = Model.UserToView.Username } , ajaxOptions: new AjaxOptions
+        {
+            HttpMethod = "POST",
+            UpdateTargetId = "postList",
+            InsertionMode = InsertionMode.InsertAfter,
+        })
+        </button>
+    }*@
+}
+
+
+
+@if (ViewBag.PageMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.PageMessage");
+    </script>
+}

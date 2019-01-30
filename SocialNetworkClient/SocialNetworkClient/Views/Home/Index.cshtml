@@ -1,13 +1,69 @@
-﻿@{
+﻿@model SocialNetworkClient.Models.MainModel
+@{
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
+<div class="jumbotron" style="height:50px;background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYFWY0c-uS2zzTo8bQUAtZj-wSUWaYM_riJDKpys3UdvWdSs2zcw')">
+    @if (Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey] != null)
+    {
+        using (Html.BeginForm("SearchUsers", "Home", FormMethod.Post))
+        {
+            @Html.EditorFor(m => m.SearchInput)
+            <input style="background-color:cornsilk" type="submit" value="Search For Users" />
+        }
+    }
 
 </div>
+
+
+
+
+@if (Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey] != null)
+{
+    @Html.Partial("AddPost", Model)
+    <br />
+    if (Model.PostList != null)
+    {
+        <div id="postlist">
+            @Html.Partial("Posts", Model)
+        </div>
+        if (Model.PostList.Count > 9)
+        {
+            <button class="btn btn-default">
+                @Ajax.ActionLink("load more", "LoadMorePosts", new {username = Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey].ToString()}, new AjaxOptions
+                {
+                    HttpMethod = "post",
+                    UpdateTargetId = "postlist",
+                    InsertionMode = InsertionMode.InsertAfter
+                })
+            </button>
+        }
+    }
+    <br />
+}
+
+
 @if (ViewBag.ErrorMessage != null)
 {
     <script type="text/javascript">
                 alert("@ViewBag.ErrorMessage");
     </script>
 }
+@if (ViewBag.SuccessMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.SuccessMessage");
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+

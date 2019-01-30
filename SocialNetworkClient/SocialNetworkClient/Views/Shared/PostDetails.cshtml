@@ -1,0 +1,65 @@
+﻿@model SocialNetworkClient.Models.Post
+
+<br />
+<div class="container" id="postDetils">
+    <div class="card" style="width:250px;align-content:center;background-image:url('https://wallpapertag.com/wallpaper/full/e/b/8/406322-background-picture-2560x1600-for-android-50.jpg');font-weight:bold; box-shadow: 1px 1px 2px black, 0 0 25px gray, 0 0 10px black;">
+        @if (Model.ImageLink != string.Empty)
+        {
+            <img style="width:100%" class="card-img-top" src="@Model.ImageLink" alt="Card image">
+        }
+        <div style="margin-left:12px" class="card-body" >
+            <h4 class="card-title">@Html.ActionLink(linkText: Model.FullName, actionName: "ViewUser", routeValues: new { username = Model.Author })</h4>
+            <h4> @Model.Like.UsersWhoLiked.Count Likes</h4>
+            <p class="card-text">@Model.Content</p> <br />
+            <p class="card-text">Posted at - @Model.DatePosted</p>
+
+            @if (Model.MantionedUser != null)
+            {
+                <p>User Mantioned @@ @Model.MantionedUser</p>
+            }
+
+            <div id=@Model.PostId>
+            </div>
+            <div>
+                @if (Model.Like.UsersWhoLiked.Contains(Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey]))
+                {
+                    <button class="btn btn-danger" style="color:white;">
+                        @Ajax.ActionLink(linkText: "UnLike", actionName: "UnLikeAPost", routeValues: Model, ajaxOptions: new AjaxOptions
+                   {
+                       HttpMethod = "Post",
+                       UpdateTargetId = "postDetils",
+                       InsertionMode = InsertionMode.Replace
+                   })
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-default">
+                        @Ajax.ActionLink(linkText: "Like", actionName: "LikeAPost", routeValues: Model, ajaxOptions: new AjaxOptions
+                   {
+                       HttpMethod = "Post",
+                       UpdateTargetId = "postDetils",
+                       InsertionMode = InsertionMode.Replace
+                   })
+                    </button>
+                }
+
+            </div>
+        </div>
+        <br/>
+        <button style="margin-left:12px;" class="btn btn-info">
+
+            @Ajax.ActionLink(linkText: "Show Comments", actionName: "GetPostComments",routeValues: Model, ajaxOptions: new AjaxOptions
+       {
+           HttpMethod = "Post",
+           UpdateTargetId = Model.PostId,
+           InsertionMode = InsertionMode.Replace
+       })
+        </button>
+    </div>
+</div>
+
+<br />
+
+@*<script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
