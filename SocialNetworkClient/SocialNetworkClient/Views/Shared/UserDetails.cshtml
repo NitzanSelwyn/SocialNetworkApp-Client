@@ -1,0 +1,13 @@
+﻿@model SocialNetworkClient.Models.MainModel
+@if (Session[SocialNetworkClient.Configs.MainConfigs.SessionUsernameKey] == null)
+{
+    using (Html.BeginForm("ClientLogin", "Home", FormMethod.Post))
+    {
+        @Html.TextBoxFor(m => m.UserLogin.Username, new { placeholder = "Username", @class = "form-input" })
+        @Html.PasswordFor(model => model.UserLogin.Password, new { placeholder = "Password", @class = "form-input" })
+        <input style="font-size:18px;height:50px" class="btn btn-success btn-sm active" type="submit" value="Log In" />
+        <a href='@Url.Action("Facebook", "Home")'>
+            <img height="50" src='https://www.grow-trees.com/images/socialpack/fbloginbutton.png' />
+        </a>
+    }
+}

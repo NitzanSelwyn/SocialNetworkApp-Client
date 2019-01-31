@@ -1,0 +1,14 @@
+﻿@model SocialNetworkClient.Models.MainModel
+
+
+
+@foreach (var item in Model.PostList)
+{ 
+    @Html.Partial("PostDetails", item)   
+}
+
+
+
+
+
+

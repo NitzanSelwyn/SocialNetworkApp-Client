@@ -1,0 +1,33 @@
+﻿@model SocialNetworkClient.Models.MainModel
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Blocked Users</h2>
+@if (Model.UsersRep.Count > 0)
+{
+    foreach (var item in Model.UsersRep)
+    {
+        <br />
+        <button class="btn btn-info">
+            @Html.ActionLink(linkText: $"{item.FullName}", actionName: "ViewUser", routeValues: new { username = item.Id })
+        </button>
+        <button class="btn btn-danger">
+            @Html.ActionLink("UnBlock", "UnblockUser", new { item.Id })
+        </button>
+        <br />
+    }
+}
+else
+{
+    <h3>You dont have any blocked users in your profile</h3>
+}
+
+@if (ViewBag.PageMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.PageMessage");
+    </script>
+}

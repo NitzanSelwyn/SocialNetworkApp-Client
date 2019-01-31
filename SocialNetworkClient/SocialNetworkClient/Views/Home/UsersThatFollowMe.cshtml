@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "UsersThatFollowMe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Users That Are Following me</h2>
+@if (Model.UsersRep.Count > 0)
+{
+    foreach (var item in Model.UsersRep)
+    {
+        <br />
+        <button class="btn btn-info">
+            @Html.ActionLink(linkText: $"{item.FullName}", actionName: "ViewUser", routeValues: new { username = item.Id })
+        </button>
+        <br />
+    }
+}
+else
+{
+    <h3>You are not followed by any users at the moment</h3>
+}
+<br />
+<br />
+
+
+@if (ViewBag.PageMessage != null)
+{
+    <script type="text/javascript">
+                alert("@ViewBag.PageMessage");
+    </script>
+}
